@@ -2,7 +2,7 @@
 
 if is_dir "$HOME/sdk/esp32" && {
   #alias get-idf='. /home/dahl/sdk/esp32/esp-idf/export.sh'
-  alias get-idf='. $HOME/sdk/esp32/esp-idf/export.sh'
+  alias get-idf='. $HOME/sdk/esp32/esp-idf/export.sh';
 }
 
 #padd "$HOME/bin/esp32/xtensa-esp32-elf/bin"
