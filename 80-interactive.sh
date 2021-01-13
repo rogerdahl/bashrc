@@ -6,7 +6,6 @@ function watch-tree() { watch -n .5 --difference --color exa --long --tree --byt
 # Misc
 alias pkill="pkill -ief"
 
-
 alias iotop="sudo iotop -o -d 2 -P"
 
 # watch df
@@ -95,22 +94,6 @@ function locates() { locate -0 "$1" | xargs -0 --no-run-if-empty ls -ld; }
 # Alias
 #
 
-# Pretty printing and syntax highlighting
-
-# When using `bat` for syntax highlighting, I'm using `--language python` for some types
-# for which `bat` has specific syntax highlighting available. I've tried those and found
-# that highlighting as Python gives overall better results. What happens is that the
-# specific highlighter will be semantically correct, for instance uniformly highlighting
-# all string literals in a single color, while the Python highlighter thinks it's seeing
-# operators and keywords in the strings, and highlights them as such. And it turns out
-# that those are often significant to the human viewer, who knows what the information
-# stored in the strings is.
-# Put a path directly in the X clipboard
-function pclip() { realpath "$1" | tr -d '\n' | xclip -se c; }
-
-# Recursive egrep in current dir with context and color
-function g() { grep -i -r --color=always -C 10 "$1" . | less -R; }
-# bat --style params: changes,grid,numbers,header,snip
 
 # The MPV video player worked with CUDA hardware decoding out of the box,
 # smoothly playing 2160p HEVC (H.265) 36,909 kbps video on my GTX1060. Couldn't
@@ -152,23 +135,6 @@ alias lsblk='lsblk -o +uuid,label,hotplug,tran'
 
 locll() { locate -0 "$1" | xargs -0 ls -l; }
 
-# --sample-tidy --full-trace
-# keep running. can't be combined with --sample-ask as pytest suppresses prompts. can be combined with --sample-write
-# View log files
-function pl() { black - <"$1" | bat --language python; }
-alias batlog='bat --paging=never --language python'
-# View XML docs (xmlstarlet + bat)
-function px() { xmlstarlet format "$1" | bat --language xml; }
-# View Python (Black + bat)
-function pp() {
-  black - <"$1" 2>/dev/null | bat --language python --style plain,changes,grid,numbers,snip
-}
-# View CSV file (column + bat)
-# column: apt install util-linux
-function view-csv() {
-  column -t -s, -n "$@" |
-    bat --wrap never --language python --pager 'less --no-init --quit-if-one-screen --chop-long-lines --quit-on-intr --RAW-CONTROL-CHARS'
-}
 
 #function pretty_csv {
 #    column -t -s, -n "$@" | less -F -S -X -K
@@ -182,3 +148,23 @@ alias tz='tar -c -I pxz -f'
 
 alias xml="xmlstarlet"
 alias pipup='pip install --upgrade pip'
+
+# Create a compressed backup of a dir (recursive)
+function bak() {
+  is_installed 'pixz' || {
+    echo 'Missing pixz: sudo apt install pixz'
+    return 1
+  }
+  src="${1}"
+  [[ -e ${src} ]] || {
+    echo "Source does not exist: ${src}"
+    return 1
+  }
+  dst="$(basename "${src}")-bak-$(date +%Y-%m-%d).txz"
+  [[ ! -e ${dst} ]] || {
+    echo "Backup already exists: ${dst}"
+    return 1
+  }
+  echo "Creating backup: ${src} -> ${dst}"
+  tar --use-compress-program=pixz -cf "${dst}" "${src}"
+}

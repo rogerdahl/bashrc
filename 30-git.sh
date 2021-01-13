@@ -16,4 +16,12 @@ alias git-i="git commit -a -m 'Initial work' && git push"
 
 alias gfix="git add /home/dahl/dev/d1_python/test_utilities/src/d1_test/test_docs && git commit -a -m 'Fix build' && git push"
 # Generate changelog.md base from git log
-alias git-changelog='git log --format="%n* %s%n    * %b" >> CHANGELOG.md $1..'
+
+#
+function git-changelog() { git log --format="%n* %s%n    * %b" $1 >>CHANGELOG.md; }
+
+function git-bashrc-push() (
+  cd "$BASHRC_DIR" || exit
+  git commit -a -m 'Initial work'
+  git push
+)

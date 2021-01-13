@@ -3,6 +3,14 @@ function is_installed() {
   return $?
 }
 
+function require() {
+  is_installed "$1" || {
+    echo "Requires command: $1"
+    test -n "$2" && echo "Install with: $2"
+    exit 1
+  }
+}
+
 function is_file() {
   test -f "$1"
   return $?
@@ -28,8 +36,8 @@ is_mounted() { findmnt -rno SOURCE,TARGET "$1" >/dev/null; }
 
 # Print argument split to lines and sorted. Default to $PATH if no argument is provided.
 function path() {
-  echo -n "${1:-:${PATH}}" | \
-  sed -re 's/:+/\n/g' | sort --ignore-leading-blanks;
+  echo -n "${1:-:${PATH}}" |
+    sed -re 's/:+/\n/g' | sort --ignore-leading-blanks
 }
 
 # Add path if it references an existing dir. This is passed through "dedup" at the end
@@ -52,7 +60,6 @@ bsd*) OSNAME="BSD" ;;
 msys*) OSNAME="WINDOWS" ;;
 *) OSNAME="${OSTYPE}" ;;
 esac
-
 
 # Colored logging
 function info() { echo -e "\e[32m*\e[39m ${*}"; }
