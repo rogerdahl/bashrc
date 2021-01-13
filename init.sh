@@ -1,23 +1,29 @@
 #!/usr/bin/env bash
 
-# Source from .bashrc with:
-# . ${HOME}/bin/bashrc.d/init.sh
+# init.sh can be sourced or executed.
+# If sourced, the sourcing script must set BASHRC_DIR.
 
-BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-export BASHRC_DIR
+#set -x
 
-function init() {
-  # Source all the 'bashrc.d' files
-  for sh in "${BASHRC_DIR}"/*.sh; do
-    test "$(basename "$sh")" != "$(basename "${BASH_SOURCE[0]}")" && {
-      # echo "$sh"
-      source "$sh"
-    }
-  done
+[[ "$0" == "$BASH_SOURCE" ]] && ret='exit' || ret='return'
+
+# Skip configuration if not running interactively.
+case $- in
+  *i*) echo >&2 'bashrc.d...' ;;
+  *) echo >&2 'bashrc.d skipped: Shell is not interactive'; $ret 0 ;;
+esac
+
+test -n "$BASHRC_DIR" || {
+  BASHRC_DIR="$(dirname "$0")"
 }
 
-# Skip configuration if not running interactively
-case $- in
-  *i*) init ;;
-  *) ;;
-esac
+#echo >&2 "BASHRC_DIR: $BASHRC_DIR"
+
+#$ret 0
+
+for sh in "$BASHRC_DIR"/*.sh; do
+  test "$(basename "$sh")" != "init.sh" && {
+    # shellcheck disable=SC1090
+    source "$sh"
+  }
+done

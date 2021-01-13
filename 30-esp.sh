@@ -1,8 +1,9 @@
 # ESP32
 
-if is_dir "$HOME/sdk/esp32" && {
+is_dir "$HOME/sdk/esp32" && {
   #alias get-idf='. /home/dahl/sdk/esp32/esp-idf/export.sh'
   alias get-idf='. $HOME/sdk/esp32/esp-idf/export.sh';
+#  echo 'Activate ESP-IDF environment with "get-idf"'
 }
 
 #padd "$HOME/bin/esp32/xtensa-esp32-elf/bin"

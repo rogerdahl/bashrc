@@ -5,9 +5,9 @@ function watch-tree() { watch -n .5 --difference --color exa --long --tree --byt
 
 # Misc
 alias pkill="pkill -ief"
-cd() { command cd "$@" && ll; }
-alias iotop="sudo iotop -o -d 2 -P"
 
+
+alias iotop="sudo iotop -o -d 2 -P"
 
 # watch df
 alias watch='watch --color --differences'

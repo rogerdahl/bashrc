@@ -2,20 +2,24 @@
 # These do better color highlighting and most (all?) have integrated GIT support.
 
 # ripgrep with paging
-function rgp () { rg --pretty "$@" | less -r; }
+is_installed rg && {
+  function rgp() { rg --pretty "$@" | less -r; }
+}
 
-
-# Use bat intead of cat if available
-if command -v bat >/dev/null 2>&1; then
-  alias b="bat --language=python"
-  alias cat=bat
-  alias catp="bat --plain"
-fi
-# Modern alterantives for commonly used commands
+# Use bat instead of cat if available
+is_installed 'bat' && {
+  alias b='bat'
+  alias br='bat --decorations=never'
+  alias bp='bat --language=python'
+  alias bpr='bat --language=python --decorations=never'
+  alias bl='bat --plain'
+}
 
 # Use exa for ll if available
 # If ll in a git repo is slow, run 'git gc --aggressive'
-if command -v exa >/dev/null 2>&1; then
+# shellcheck disable=SC2139
+case $(is_installed 'exa' && echo "y") in
+'y')
   exa_args='--long --git --bytes --group --time-style=long-iso --group-directories-first --extended'
   # Have removed --git for now because of 1 second delay in d1_python
   # and a bug where it crashes on dangling symlink.
@@ -24,21 +28,27 @@ if command -v exa >/dev/null 2>&1; then
   alias lw="exa --sort new $exa_args"
   alias lo="exa --sort old $exa_args"
   alias lt="exa --tree"
-else
+  ;;
+*)
   alias ll='ls -l --group-directories-first --color=auto'
-fi
+  ;;
+esac
 
-if command -v bat >/dev/null 2>&1; then
-   alias cat=bat
-   alias b='bat --language python'
-   alias br='bat --language python --decorations=never'
-fi
-
-# Always use NeoVim if available
 is_installed 'nvim' && {
-  # The linking here caused trouble with spacevim.
-  #  mkdir -p ${XDG_CONFIG_HOME:=$HOME/.config}
-  #  ln -sf "$HOME/.vim" "$XDG_CONFIG_HOME/nvim"
-  #  ln -sf "$HOME/.vimrc" "$XDG_CONFIG_HOME/nvim/init.vim"
   alias vim='nvim'
 }
+
+# Automatic ls after cd
+# Must run after the ll alias is defined.
+# https://unix.stackexchange.com/a/336077/21709
+# Each console has its own file to save PWD
+PrevDir=$(tty)
+PrevDir=/tmp/prev-dir${PrevDir////-}
+# Don't ls when shell launched
+echo $PWD > $PrevDir
+LsAfterCd() {
+    [[ "$(< $PrevDir)" == "$PWD" ]] && return 0
+    ll
+    echo $PWD > $PrevDir
+}
+PROMPT_COMMAND=LsAfterCd

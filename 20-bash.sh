@@ -8,7 +8,7 @@ export COLORTERM=truecolor
 eval "$(dircolors)"
 
 # Magic that causes output to stderr to be colored red
-stderred="$HOME/bin/_stderred/libstderred.so"
+stderred="$BASHRC_DIR/libstderred.so"
 test -n "$stderred" && {
   export LD_PRELOAD="$stderred${LD_PRELOAD:+:$LD_PRELOAD}"
 }
