@@ -25,3 +25,8 @@ function git-bashrc-push() (
   git commit -a -m 'Initial work'
   git push
 )
+
+function git-bashrc-pull() (
+  cd "$BASHRC_DIR" || exit
+  git pull
+)
