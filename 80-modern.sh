@@ -40,15 +40,8 @@ is_installed 'nvim' && {
 
 # Automatic ls after cd
 # Must run after the ll alias is defined.
-# https://unix.stackexchange.com/a/336077/21709
-# Each console has its own file to save PWD
-PrevDir=$(tty)
-PrevDir=/tmp/prev-dir${PrevDir////-}
-# Don't ls when shell launched
-echo $PWD > $PrevDir
-LsAfterCd() {
-    [[ "$(< $PrevDir)" == "$PWD" ]] && return 0
-    ll
-    echo $PWD > $PrevDir
+function ls_after_cd() {
+  test "$prev" != "$PWD" -a -n "$prev" && ll
+  prev="$PWD"
 }
-PROMPT_COMMAND=LsAfterCd
+PROMPT_COMMAND=ls_after_cd
