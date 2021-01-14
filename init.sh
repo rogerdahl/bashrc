@@ -9,8 +9,12 @@
 
 # Skip configuration if not running interactively.
 case $- in
-  *i*) echo >&2 'bashrc.d...' ;;
-  *) echo >&2 'bashrc.d skipped: Shell is not interactive'; $ret 0 ;;
+*i*) ;;
+
+*)
+  echo >&2 'bashrc.d skipped: Shell is not interactive'
+  $ret 0
+  ;;
 esac
 
 test -n "$BASHRC_DIR" || {
@@ -23,7 +27,15 @@ test -n "$BASHRC_DIR" || {
 
 for sh in "$BASHRC_DIR"/*.sh; do
   test "$(basename "$sh")" != "init.sh" && {
+    printf "\rbashrc.d - $sh"
+    tput ed
     # shellcheck disable=SC1090
     source "$sh"
   }
 done
+
+printf "\r"
+tput ed
+
+perl -pe 's/(\d\d)T(\d\d)/$1 $2/g; s/:00 / /g; s/wtmp.*\n//g;' \
+  <(last --hostlast --dns --time-format iso --present now --fullnames -3 | tac)
