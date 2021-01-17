@@ -70,7 +70,6 @@ alias egrep='egrep --color=auto'
 # Grep with color, current dir, recursive, Perl compatible regexp
 function gr() { grep -R --perl-regex --color=always "$1" . | less --raw; }
 
-alias rs='rsync --recursive --verbose --progress --links --times --omit-dir-times'
 alias notheme='env GTK2_RC_FILES=/usr/share/themes/Mint-X-Teal/gtk-2.0/gtkrc'
 alias dcm2txt='for f in *.dcm; do dcmdump > $f.txt $f; done'
 alias start='xdg-open'
