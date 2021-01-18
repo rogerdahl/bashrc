@@ -1,7 +1,12 @@
+# Copy settings for konsole to another machine.
 function konsole-sync() {
-  rs .config/konsole* "$1":.config/
-  rs .local/share/konsole "$1":.local/share/
+  [[ -n "$1" ]] || { echo "Usage: $1 <ssh server name without \":\">"; return 1; }
+  [[ -n "$RSYNC_ARGS" ]] || { echo "Missing RSYNC_ARGS"; return 1; }
+  rsync "$RSYNC_ARGS" .config/konsole* "$1":.config/
+  rsync "$RSYNC_ARGS" .local/share/konsole "$1":.local/share/
 }
+
+
 
 # Automatically set up Konsole with predefined tabs with titles and executes.
 #source ~/bin/konsole-tabs.sh
@@ -13,8 +18,3 @@ function konsole-sync() {
 #     )
 #    start_sessions sessions[@]
 #}
-
-
-- Take out EDI links
-- entityName or objectName
-

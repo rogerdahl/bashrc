@@ -110,7 +110,6 @@ alias grep='grep --color=auto --perl-regexp'
 #alias egrep='egrep --color=auto'
 #alias grep='rg'
 
-alias rs='rsync --recursive --links --times --info=progress2'
 alias notheme='env GTK2_RC_FILES=/usr/share/themes/Mint-X-Teal/gtk-2.0/gtkrc'
 alias dcm2txt='for f in *.dcm; do dcmdump > $f.txt $f; done'
 alias start='gtk-launch'
@@ -121,7 +120,8 @@ alias nobuffer='stdbuf -i0 -o0 -e0'
 # rsync
 # Filtering: Remember the *** operator that was added in 2.6.7 (2006) and that 'dir/**' does not match dirs.
 # Copying only dirs d1 and d2: rs -f '+ d1/***' -f '+ d2/***' -f '- *'
-RSYNC_ARGS='--recursive --verbose --progress --links --times'
+RSYNC_ARGS='--recursive --links --times --info=progress2'
+# shellcheck disable=SC2139
 alias rs="rsync $RSYNC_ARGS"
 
 # Case insensitive search in man pages
