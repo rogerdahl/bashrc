@@ -5,6 +5,8 @@
 
 #set -x
 
+export BASHRC_DEBUG=0
+
 [[ "$0" == "$BASH_SOURCE" ]] && ret='exit' || ret='return'
 
 # Skip configuration if not running interactively.
@@ -23,7 +25,8 @@ shopt -q login_shell && {
 for sh in "$BASHRC_DIR"/*.sh; do
   [[ "$(basename "$sh")" != "init.sh" ]] && {
     printf "\rbashrc.d - $sh"
-    tput ed
+    [[ $BASHRC_DEBUG = "0" ]]
+#    tput ed
     # shellcheck disable=SC1090
     source "$sh"
   }

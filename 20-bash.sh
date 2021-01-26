@@ -7,14 +7,7 @@ export TERM=xterm-256color
 export COLORTERM=truecolor
 eval "$(dircolors)"
 
-# Magic that causes output to stderr to be colored red
-stderred="$BASHRC_DIR/libstderred.so"
-test -n "$stderred" && {
-  export LD_PRELOAD="$stderred${LD_PRELOAD:+:$LD_PRELOAD}"
-}
-# Aliases to turn stderr coloring on and off (it's on by default)
-alias red-off='LD_PRELOAD_RED_OFF=$LD_PRELOAD; unset LD_PRELOAD'
-alias red-on='LD_PRELOAD=$LD_PRELOAD_RED_OFF; unset LD_PRELOAD_RED_OFF'
+
 
 # Prompt
 # shellcheck disable=SC2154
