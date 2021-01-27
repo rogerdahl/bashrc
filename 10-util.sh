@@ -3,14 +3,6 @@ function is_installed() {
   return $?
 }
 
-function require() {
-  is_installed "$1" || {
-    echo "Requires command: $1"
-    test -n "$2" && echo "Install with: $2"
-    exit 1
-  }
-}
-
 function is_file() {
   test -f "$1"
   return $?
