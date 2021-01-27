@@ -26,23 +26,31 @@ SYS_COMMON_PATH = pathlib.Path('/usr/share/i18n/locales/iso14651_t1_common')
 SYS_EN_US_PATH = pathlib.Path('/usr/share/i18n/locales/en_US')
 
 CUSTOM_COMMON_PATH = pathlib.Path(LOCALE_PATH / (SYS_COMMON_PATH.name + '.custom'))
+CUSTOM_EN_US_PATH = pathlib.Path(LOCALE_PATH / (SYS_EN_US_PATH.name + '.custom'))
 
 
 def main():
     create_custom_common()
-    result = subprocess.run(
-        ['localedef', '-v', '-c', '-i', 'en_US', '-f', 'UTF-8', LOCALE_PATH.as_posix()],
+    subprocess.run(
+        [
+            'localedef',
+            '--quiet',
+            '--verbose',
+            '--force',
+            '--inputfile',
+            CUSTOM_EN_US_PATH,
+            '--charmap',
+            'UTF-8',
+            LOCALE_PATH,
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         cwd=HERE_PATH,
     )
 
-    print(result.stdout.decode('utf-8'))
-    print(result.stderr.decode('utf-8'))
-
 
 def create_custom_common():
-    shutil.copy(SYS_EN_US_PATH, HERE_PATH)
+    shutil.copy(SYS_EN_US_PATH, CUSTOM_EN_US_PATH)
 
     with CUSTOM_COMMON_PATH.open('w') as mod:
         for s in SYS_COMMON_PATH.open():

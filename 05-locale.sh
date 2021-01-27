@@ -19,7 +19,6 @@ LOCPATH="$BASHRC_DIR/locale"
 export LOCALE_PATH
 
 [[ -e "$LOCPATH/LC_ADDRESS" ]] || {
-  set -x
   mkdir -p "$BASHRC_DIR/locale"
   "$BASHRC_DIR/generate-locale.py"
 }
