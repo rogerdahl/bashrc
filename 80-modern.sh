@@ -32,13 +32,10 @@ case $(is_installed 'exa' && echo "y") in
   alias ll="exa --sort name $exa_args"
   alias lw="exa --sort new $exa_args"
   alias lo="exa --sort old $exa_args"
-  alias lt="exa --tree $exa_args"
-} || {
-  alias lt="exa --tree $exa_args"
-  ;;
+  alias lt="exa --tree $exa_args" ;;
 *)
-  alias ll='ls -l --group-directories-first --color=auto'
-}
+  alias ll='ls -l --group-directories-first --color=auto' ;;
+esac
 
 is_installed 'nvim' && {
   alias vim='nvim'
