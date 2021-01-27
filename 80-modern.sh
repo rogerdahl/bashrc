@@ -3,7 +3,12 @@
 
 # ripgrep with paging
 is_installed rg && {
+  # Pretty print with syntax highlight colors preserved
   function rgp() { rg --pretty "$@" | less -r; }
+  # Print only the maths of files with one or more matches
+  alias rg-path='rg --files-with-matches'
+} || {
+  echo 'ripgrep not installed'
 }
 
 # Use bat instead of cat if available
@@ -18,8 +23,7 @@ is_installed 'bat' && {
 # Use exa for ll if available
 # If ll in a git repo is slow, run 'git gc --aggressive'
 # shellcheck disable=SC2139
-case $(is_installed 'exa' && echo "y") in
-'y')
+is_installed 'exa' && {
   exa_args='--long --git --bytes --group --time-style=long-iso --group-directories-first --extended'
   # Have removed --git for now because of 1 second delay in d1_python
   # and a bug where it crashes on dangling symlink.
@@ -27,12 +31,10 @@ case $(is_installed 'exa' && echo "y") in
   alias ll="exa --sort name $exa_args"
   alias lw="exa --sort new $exa_args"
   alias lo="exa --sort old $exa_args"
-  alias lt="exa --tree"
-  ;;
-*)
+  alias lt="exa --tree $exa_args"
+} || {
   alias ll='ls -l --group-directories-first --color=auto'
-  ;;
-esac
+}
 
 is_installed 'nvim' && {
   alias vim='nvim'

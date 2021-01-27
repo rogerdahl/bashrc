@@ -24,14 +24,21 @@ shopt -q login_shell && {
 
 for sh in "$BASHRC_DIR"/*.sh; do
   [[ "$(basename "$sh")" != "init.sh" ]] && {
-    printf "\rbashrc.d - $sh"
-    [[ $BASHRC_DEBUG = "0" ]]
-#    tput ed
-    # shellcheck disable=SC1090
-    source "$sh"
+    [[ "$(basename "$sh")" =~ ^[0-9][0-9]- ]] && {
+      # shellcheck disable=SC1090
+      source "$sh"
+      # [[ $BASHRC_DEBUG = "0" ]]
+      # printf "\rbashrc.d - $sh"
+      #    tput ed
+      # A gotcha with this if/or/else pattern is that, if the script being sourced
+      # ends with a command that returns a non-zero exit code, it will also run the
+      # else part. To avoid that, we force the exit code to zero with 'true' here.
+      true
+    } || {
+      echo >&2 "Ignored file not starting with \"\d\d-\": \"$sh\""
+    }
   }
 done
 
 printf "\r"
 tput ed
-

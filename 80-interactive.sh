@@ -25,15 +25,13 @@ alias m4b-tool='docker run -it --rm -u $(id -u):$(id -g) -v "$(pwd)":/mnt m4b-to
 
 alias trash-empty='gio trash --empty'
 
-# ripgrep with paging
-function rgp() { rg -p "$1" | less -r; }
-
-# Group file sizes by thousand in coreutils (ls, du, etc)
+# Settings for ls, du and other commands from the coreutils package.
+# Group file sizes by thousands
 export BLOCK_SIZE="'1"
-
-# Remove extra quoting in ls
+# Don't append type indicator character to the end of filenames (@, /, etc)
 export QUOTING_STYLE=literal
-
+# Sensible time format (ISO 8601 with space instead of "T" separator)
+export TIME_STYLE='+%Y-%m-%d %H:%M:%S'
 # Make 'less' scroll lines just before a match into view (shows context)
 # and pass though ANSI color codes.
 export LESS="${LESS}j5 -R"
@@ -47,7 +45,6 @@ xterm* | rxvt*)
   PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h \w\a\]$PS1"
   ;;
 *) ;;
-
 esac
 
 #XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/dahl/.local/share/flatpak/exports/share${XDG_DATA_DIRS:+:${XDG_DATA_DIRS}}"; export XDG_DATA_DIRS;
@@ -93,7 +90,6 @@ function locates() { locate -0 "$1" | xargs -0 --no-run-if-empty ls -ld; }
 # Alias
 #
 
-
 # The MPV video player worked with CUDA hardware decoding out of the box,
 # smoothly playing 2160p HEVC (H.265) 36,909 kbps video on my GTX1060. Couldn't
 # get VLC and MPlayer to play the file smoothly even after a bunch of fiddling.
@@ -133,7 +129,6 @@ alias v='nomacs'
 alias lsblk='lsblk -o +uuid,label,hotplug,tran'
 
 locll() { locate -0 "$1" | xargs -0 ls -l; }
-
 
 #function pretty_csv {
 #    column -t -s, -n "$@" | less -F -S -X -K

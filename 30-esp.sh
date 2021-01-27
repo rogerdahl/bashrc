@@ -1,8 +1,14 @@
 # ESP32
 
-is_dir "$HOME/sdk/esp32" && {
-  #alias get-idf='. /home/dahl/sdk/esp32/esp-idf/export.sh'
-  alias get-idf='. $HOME/sdk/esp32/esp-idf/export.sh';
+# Install ESP32 ESP-IDF (SDK):
+# Grab ESP-IDF from GitHub
+# - Uncompress it to ~/sdk/esp-idf-<version>
+# - Symlink to it from ~/sdk/esp-idf
+# - $ pyenv shell 3.8.6
+# - $ ~/sdk/esp-idf/install.sh
+idf_dir="$HOME/sdk/esp-idf"
+is_dir "$idf_dir" && {
+  alias get-idf='. $idf_dir/export.sh'
 #  echo 'Activate ESP-IDF environment with "get-idf"'
 }
 
