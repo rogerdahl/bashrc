@@ -11,17 +11,10 @@ stderr_red="$BASHRC_DIR/libstderred.so"
 alias red-off='LD_PRELOAD_RED_OFF=$LD_PRELOAD; unset LD_PRELOAD'
 alias red-on='LD_PRELOAD=$LD_PRELOAD_RED_OFF; unset LD_PRELOAD_RED_OFF'
 
-# Check stderr_red
-# bash does not seem to load the .so. Not sure why. This will check if it works.
-red='/tmp/test-stderr_red'
-cat > $red.c <<EOF
-#include "stdio.h"
-int main() {
-  fprintf(stderr, "This line is written to stderr and should be colored red\n");
-  return 0;
-}
+# Check if stderred works. Prints a line of text to stderr, which should show up in red.
+function check-stderred() {
+  python <<EOF
+import sys;
+print("This line is written to stderr and should be colored red", file=sys.stderr);
 EOF
-gcc -o $red $red.c
-$red
-rm $red $red.c
-
+}
