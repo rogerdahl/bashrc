@@ -31,8 +31,8 @@ function g() { grep -i -r --color=always -C 10 "$1" . | less -R; }
 
 # CSV (column + bat)
 function pcsv() {
-  require 'column' 'apt install util-linux'
-  require 'bat'
+  requires 'util-linux' # column
+  requires 'bat'
 
   column -t -s, -n "$1" |
     bat --wrap never --language python --pager \
