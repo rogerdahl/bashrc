@@ -32,8 +32,6 @@ function pyenv-setup() {
   PY_LATEST_VER=$(pyenv-find-latest-py-ver)
   printf "Latest CPython: %s\n" "$PY_LATEST_VER"
   pyenv-install-py-ver "$PY_LATEST_VER"
-  pyenv-init
-  pipup
   PY_GLOBAL_VENV="global-$(iso-now)"
   pyenv-install-venv "$PY_LATEST_VER" "$PY_GLOBAL_VENV"
   pyenv global "$PY_GLOBAL_VENV"
@@ -46,7 +44,7 @@ function pyenv-install-or-update-pyenv() {
     curl 'https://pyenv.run' | bash
   }
   pyenv-init
-  pyenv update -v
+  pyenv-update
 }
 
 # Install a virtualenv.
@@ -55,12 +53,14 @@ function pyenv-install-or-update-pyenv() {
 function pyenv-install-venv() {
   py_ver="$1"
   venv="$2"
+  echo "pyenv-install-venv() py_ver=$py_ver venv=$venv"
   [[ -n "$py_ver" ]] || [[ -n "$venv" ]] || {
     echo "Usage $0 <CPython version (x.y.z)> <name of virtualenv>"
     return 1
   }
   pyenv-install-py-ver "$py_ver"
-  pyenv virtualenv -v "$py_ver" "$venv"
+  pyenv-install-basic-packages
+  pyenv virtualenv "$py_ver" "$venv"
 }
 
 # Install a specific version of Python if it is not already installed.
@@ -75,21 +75,33 @@ function pyenv-install-py-ver() {
   export CFLAGS=-O3
   export MAKE_OPTS=-j16
   pyenv install -v "$py_ver"
+
+  pyenv-init
+  pip-up
+
 }
 
 # Return the latest version of CPython that is available to pyenv online.
 # The returned version may or may not already be installed.
 function pyenv-find-latest-py-ver() {
-  pyenv -v update >/dev/null 2>&1
   # shellcheck disable=SC2016
   latest_cpython='m/^\s*(\d+\.\d+\.\d+)\s*$/ && { $v=$1 }; END {print $v}'
   printf "%s" "$(pyenv install --list | perl -ne "$latest_cpython")"
+}
+
+function pyenv-update() {
+  pyenv update -v >/dev/null 2>&1
 }
 
 function pyenv-is-installed-ver() {
   py_ver="$1"
   pyenv versions | env grep --quiet --perl-regex "^\s*$py_ver\s*$"
   return $?
+}
+
+function pyenv-is-installed-venv() {
+  venv="$1"
+  pyenv virtualenvs --bare | env grep --quiet --perl-regex "^\s*$venv\s*$"
 }
 
 function pyenv-init() {
@@ -101,8 +113,44 @@ function pyenv-init() {
   fi
 }
 
-function pipup() {
-  pip install --upgrade pip wheel
+pyenv-init
+
+# pip
+
+function pip-init() {
+  pip-up
+  pip-install-core
 }
 
-pyenv-init
+function pip-install-core() {
+  pip install --upgrade pip
+  pip install wheel virtualenv
+}
+
+function pip-up() {
+  pip_path="$(pyenv which pip)"
+  [[ -n "$(find "$pip_path" -not -newerct '3 days ago')" ]] && {
+    pip-up-now
+    touch "$pip_path"
+  }
+}
+
+function pip-up-now() {
+  pip install --upgrade pip
+}
+
+function pip-upgrade-all() {
+  pip list --outdated --format=freeze |
+    grep -v "^\-e" |
+    cut -d = -f 1 |
+    xargs -n1 env pip install -U
+}
+
+# Install wheel if not already installed.
+function pip-is-package-installed() {
+  pkg="$1"
+  pip freeze | grep -qi "^${pkg}\b"
+  return $?
+}
+
+alias pip='pip-up && pip'

@@ -23,7 +23,8 @@ is_installed 'bat' && {
 # Use exa for ll if available
 # If ll in a git repo is slow, run 'git gc --aggressive'
 # shellcheck disable=SC2139
-is_installed 'exa' && {
+case $(is_installed 'exa' && echo "y") in
+'y')
   exa_args='--long --git --bytes --group --time-style=long-iso --group-directories-first --extended'
   # Have removed --git for now because of 1 second delay in d1_python
   # and a bug where it crashes on dangling symlink.
@@ -33,6 +34,9 @@ is_installed 'exa' && {
   alias lo="exa --sort old $exa_args"
   alias lt="exa --tree $exa_args"
 } || {
+  alias lt="exa --tree $exa_args"
+  ;;
+*)
   alias ll='ls -l --group-directories-first --color=auto'
 }
 

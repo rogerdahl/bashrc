@@ -1,27 +1,57 @@
 # ESP32
 
-# Install ESP32 ESP-IDF (SDK):
-# Grab ESP-IDF from GitHub
-# - Uncompress it to ~/sdk/esp-idf-<version>
-# - Symlink to it from ~/sdk/esp-idf
-# - $ pyenv shell 3.8.6
-# - $ ~/sdk/esp-idf/install.sh
-idf_dir="$HOME/sdk/esp-idf"
-is_dir "$idf_dir" && {
-  alias get-idf='. $idf_dir/export.sh'
-#  echo 'Activate ESP-IDF environment with "get-idf"'
+# Install for pyenv.
+# Run in the root of the project.
+_esp_idf_path="$HOME/sdk/esp-idf"
+
+is_dir "$_esp_idf_path" && {
+  # Must be run from the same Python environment that it was installed in.
+  # It's probably best to keep a separate venv only for ESP-IDF and set set it in the
+  # root of ESP-IDF projects.
+  ESP_IDF_PATH="$_esp_idf_path"
+  IDF_PYTHON_ENV_PATH="$_esp_idf_path"
+  # Activate ESP-IDF environment with "get-idf"
+  alias get-idf='. $ESP_IDF_PATH/export.sh'
+  PY_ESP_IDF_VENV="esp-idf"
+
+  export IDF_PYTHON_ENV_PATH
+  export ESP_IDF_PATH
+  export PY_ESP_IDF_VENV
 }
 
-#padd "$HOME/bin/esp32/xtensa-esp32-elf/bin"
-#export IDF_PATH="$HOME/bin/esp32/esp-idf"
-#padd "$HOME/bin/espressif/ct/builds/xtensa-esp32-elf/bin"
-#export IDF_PATH=$HOME/bin/espressif/esp-idf
-#IDF_ADD_PATHS_EXTRAS="${IDF_PATH}/components/esptool_py/esptool:${IDF_PATH}/components/espcoredump:${IDF_PATH}/components/partition_table/"
-#export PATH="${PATH}:${IDF_ADD_PATHS_EXTRAS}"
+function esp-idf-install() {
+  [[ -f "./sdkconfig" ]] || {
+    echo 'Run this command in the root of an ESP-IDF project'
+    echo '(Checked for and did not find "./sdkconfig")'
+    return 1
+  }
+  pyenv-setup
+  pyenv-is-installed-venv "$PY_ESP_IDF_VENV" || {
+    PY_LATEST_VER="$(pyenv-find-latest-py-ver)"
+    pyenv-install-venv "$PY_LATEST_VER" "$PY_PY_ESP_IDF_VENV"
+  }
+  pyenv local "$PY_PY_ESP_IDF_VENV"
+  "$ESP_IDF_PATH/install.sh"
+  pip-wheel
+  . "$ESP_IDF_PATH/export.sh"
+}
+
+function esp-idf-install-pip-deps() {
+  pip-install-core-packages
+  pip install \
+    "gdbgui==0.13.2.0" \
+    "pygdbmi<=0.9.0.2" \
+    "reedsolo>=1.5.3,<=1.5.4" \
+    "bitstring>=3.1.6" \
+    "ecdsa>=0.16.0"
+}
+
+# Dark mode for menuconfig
+#idf.py menuconfig --style monochrome
+export MENUCONFIG_STYLE='monochrome'
 
 # ESP8266
 #padd "/home/dahl/hdd/sdk/esp8266/xtensa-lx106-elf/bin"
 #export ESP_ROOT="/home/dahl/hdd/sdk/esp8266"
 ##export SDK_PATH="/mnt/int-4.0-hgst/dev_sdk/esp8266_sdk/ESP8266_RTOS_SDK"
 ##export BIN_PATH="/mnt/int-4.0-hgst/dev_sdk/esp8266_sdk/ESP8266_RTOS_SDK/bin"
-

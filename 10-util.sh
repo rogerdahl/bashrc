@@ -66,3 +66,10 @@ function info() { echo -e "\e[32m*\e[39m ${*}"; }
 function warn() { echo -e "\e[33m*\e[39m ${*}"; }
 function error() { echo -e "\e[31m*\e[39m ${*}"; }
 function nln() { echo ""; }
+
+# Return the current date-time in a format similar to ISO 8601.
+# - Date and time are separated by an underscore instead of "T".
+# - Hour, minute and second are separated by ";" instead of ":" (for use in filename)
+function iso-now() {
+  printf "%s" "$(date "+%Y-%m-%d_%H;%M;%S")"
+}

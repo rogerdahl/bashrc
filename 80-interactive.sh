@@ -141,7 +141,6 @@ alias tz='tar -c -I pxz -f'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 alias xml="xmlstarlet"
-alias pipup='pip install --upgrade pip'
 
 # Create a compressed backup of a dir (recursive)
 function bak() {
@@ -154,7 +153,7 @@ function bak() {
     echo "Source does not exist: ${src}"
     return 1
   }
-  dst="$(basename "${src}")-bak-$(date +%Y-%m-%d).txz"
+  dst="$(basename "${src}")-bak-$(iso-now).txz"
   [[ ! -e ${dst} ]] || {
     echo "Backup already exists: ${dst}"
     return 1

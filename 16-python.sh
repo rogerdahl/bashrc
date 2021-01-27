@@ -1,9 +1,6 @@
 
 # Python 2 to 3, write converted file back to original
 alias 2to3='2to3 -w'
-alias pip='pip install --upgrade pip wheel && pip'
-# Upgrade all packages to latest
-alias pip-upgrade='pip list --outdated --format=freeze | grep -v "^\-e" | cut -d = -f 1  | xargs -n1 pip install -U'
 alias black='black --skip-string-normalization'
 
 # Run tests with debugging and sample updating
