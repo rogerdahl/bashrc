@@ -1,3 +1,7 @@
+# Utilities used within bashrc.c. These are generally useful as well, just remember to
+# either copy them into the new scripts if they should run outside of an environment set
+# up by bashrc.d.
+
 function is_installed() {
   command -v "$1" >/dev/null 2>&1
   return $?
