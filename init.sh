@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 
-# init.sh can be sourced or executed.
-# If sourced, the sourcing script must set BASHRC_DIR.
+# This script must be sourced: . init.sh
 
 #set -x
 
-export BASHRC_DEBUG=0
+# True: Any non-empty string
+export BASHRC_DEBUG="y"
 
-[[ "$0" == "$BASH_SOURCE" ]] && ret='exit' || ret='return'
+[[ "$0" == "${BASH_SOURCE[0]}" ]] && {
+  echo "This script must be sourced: . $0"
+  chmod a-x "$0"
+  exit
+}
 
 # Skip configuration if not running interactively.
-[[ $- == *i* ]] || $ret
+[[ $- == *i* ]] || return
+
+echo 'bashrc.d...'
 
 # Display 'last' info for login shells
 shopt -q login_shell && {
@@ -23,22 +29,11 @@ shopt -q login_shell && {
 }
 
 for sh in "$BASHRC_DIR"/*.sh; do
-  [[ "$(basename "$sh")" != "init.sh" ]] && {
-    [[ "$(basename "$sh")" =~ ^[0-9][0-9]- ]] && {
-      # shellcheck disable=SC1090
-      source "$sh"
-      # [[ $BASHRC_DEBUG = "0" ]]
-      # printf "\rbashrc.d - $sh"
-      #    tput ed
-      # A gotcha with this if/or/else pattern is that, if the script being sourced
-      # ends with a command that returns a non-zero exit code, it will also run the
-      # else part. To avoid that, we force the exit code to zero with 'true' here.
-      true
-    } || {
-      echo >&2 "Ignored file not starting with \"\d\d-\": \"$sh\""
-    }
+  [[ -n "$BASHRC_DEBUG" ]] && echo "$sh"
+  [[ ! "$(basename "$sh")" =~ ^[0-9][0-9]-.* ]] && {
+    [[ -n "$BASHRC_DEBUG" ]] && echo 'ignored'
+    continue
   }
+  # shellcheck disable=SC1090
+  source "$sh"
 done
-
-printf "\r"
-tput ed

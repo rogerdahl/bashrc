@@ -139,7 +139,7 @@ function bak() {
     echo "Source does not exist: ${src}"
     return 1
   }
-  dst="$(basename "${src}")-bak-$(iso-now).txz"
+  dst="$(basename "${src}")-bak-$(now).txz"
   [[ ! -e ${dst} ]] || {
     echo "Backup already exists: ${dst}"
     return 1

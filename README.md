@@ -1,5 +1,7 @@
 # bashrc.d
 
+## Install
+
 ```shell script
 $ bash -c '
   set -x
@@ -12,6 +14,9 @@ $ bash -c '
 '
 ```
 
+* The existing ~/.bashrc file is moved into ~/bin/bashrc.d/bashrc.original
+
+##
 
 # Custom locale
 

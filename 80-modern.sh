@@ -11,7 +11,7 @@ is_installed rg && {
   echo 'ripgrep not installed'
 }
 
-# Use bat instead of cat if available
+# Bat, the amazing cat with wings.
 is_installed 'bat' && {
   alias b='bat'
   alias br='bat --decorations=never'
@@ -20,21 +20,28 @@ is_installed 'bat' && {
   alias bl='bat --plain'
 }
 
-# Use exa for ll if available
 # If ll in a git repo is slow, run 'git gc --aggressive'
 # shellcheck disable=SC2139
-case $(is_installed 'exa' && echo "y") in
-'y')
-  exa_args='--long --git --bytes --group --time-style=long-iso --group-directories-first --extended'
+case $(
+  is_installed 'exa'
+  echo -n "$?"
+) in
+0)
   # Have removed --git for now because of 1 second delay in d1_python
   # and a bug where it crashes on dangling symlink.
-  exa_args='--long --bytes --group --time-style=long-iso --group-directories-first --extended'
-  alias ll="exa --sort name $exa_args"
-  alias lw="exa --sort new $exa_args"
-  alias lo="exa --sort old $exa_args"
-  alias lt="exa --tree $exa_args" ;;
+  # shellcheck disable=SC2191
+  exa_args=(
+  --bytes --extended --git --group --group-directories-first --long
+  --time-style=long-iso
+  )
+  alias ll="exa --sort name ${exa_args[*]}"
+  alias lw="exa --sort new ${exa_args[*]}"
+  alias lo="exa --sort old ${exa_args[*]}"
+  alias lt="exa --tree ${exa_args[*]}"
+  ;;
 *)
-  alias ll='ls -l --group-directories-first --color=auto' ;;
+  alias ll='ls -l --group-directories-first --color=auto'
+  ;;
 esac
 
 is_installed 'nvim' && {

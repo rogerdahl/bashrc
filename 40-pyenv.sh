@@ -32,7 +32,7 @@ function pyenv-setup() {
   PY_LATEST_VER=$(pyenv-find-latest-py-ver)
   printf "Latest CPython: %s\n" "$PY_LATEST_VER"
   pyenv-install-py-ver "$PY_LATEST_VER"
-  PY_GLOBAL_VENV="global-$(iso-now)"
+  PY_GLOBAL_VENV="global-$(now)"
   pyenv-install-venv "$PY_LATEST_VER" "$PY_GLOBAL_VENV"
   pyenv global "$PY_GLOBAL_VENV"
   export PY_LATEST_VER
