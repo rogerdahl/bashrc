@@ -15,16 +15,17 @@
 
 
 # Set user LOCPATH, which overrides the system locale location.
-LOCPATH="$BASHRC_DIR/locale"
-export LOCPATH
+#LOCPATH="$BASHRC_DIR/locale"
+#export LOCPATH
+#
+#[[ -e "$LOCPATH/LC_ADDRESS" ]] || {
+#  mkdir -p "$BASHRC_DIR/locale"
+#  "$BASHRC_DIR/generate-locale.py"
+#}
 
-[[ -e "$LOCPATH/LC_ADDRESS" ]] || {
-  mkdir -p "$BASHRC_DIR/locale"
-  "$BASHRC_DIR/generate-locale.py"
-}
-
-function unset_all_lc() {
-  for x in $(env | grep LC); do
+function unset-all-lc() {
+  for x in $(env | grep '^(LC|LANG|LANGUAGE|LOCPATH)$'); do
+    echo "$x"
     unset "$(echo "$x" | perl -pe 's/=.*//')"
   done
 }
