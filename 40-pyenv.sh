@@ -153,4 +153,4 @@ function pip-is-package-installed() {
   return $?
 }
 
-alias pip='pip-up && pip'
+#alias pip='pip-up; pip'
