@@ -16,7 +16,7 @@
 
 # Set user LOCPATH, which overrides the system locale location.
 LOCPATH="$BASHRC_DIR/locale"
-export LOCALE_PATH
+export LOCPATH
 
 [[ -e "$LOCPATH/LC_ADDRESS" ]] || {
   mkdir -p "$BASHRC_DIR/locale"
