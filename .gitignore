@@ -1,2 +1,4 @@
 *.private.sh
 /locale/
+/stderred/
+

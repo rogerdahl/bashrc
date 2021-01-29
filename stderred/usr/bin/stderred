@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source /usr/share/stderred/stderred.sh
+
+exec "$@"

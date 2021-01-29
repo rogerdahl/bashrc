@@ -8,8 +8,8 @@ requires 'coreutils' 'realpath'
 
 # Colored logging
 debug() { echo -e "\e[32mDEBUG  \e[39m ${*}"; }
-warn() { echo -e "\e[33mWARNING\e[39m ${*}"; }
-error() { echo -e "\e[31mmERROR \e[39m ${*}"; }
+warn() { echo  -e "\e[33mWARNING\e[39m ${*}"; }
+error() { echo -e "\e[31mERROR  \e[39m ${*}"; }
 nln() { echo ""; }
 dbg() {
   [[ -n "${BASHRC_DEBUG}" ]] && debug "$@"
@@ -30,14 +30,15 @@ is-dir() {
   return $?
 }
 
-# Add a directory path to the front of PATH, or another ":" delimited env var.
+# Add path to the front of PATH, or another ":" delimited env var.
 # - Converts relative path to absolute.
-# - No-op if the path does not exist. Uses current dir if path not given.
+# - No-op if the path does not exist.
+# - Uses current dir if path not given.
 # - Optional second argument allows acting on another env var.
 padd() {
-  dir_path="$1"
+  path="$1"
   if [[ -n "$2" ]]; then env_var="$2"; else env_var="PATH"; fi
-  abs_path="$(realpath --canonicalize-existing --quiet "$dir_path")"
+  abs_path="$(realpath --canonicalize-existing --quiet "$path")"
   if [ $? -eq 0 ]; then
     # Indirect variable read: ${!var}
     # Indirect variable update: printf -v var
@@ -46,7 +47,7 @@ padd() {
     dbg "Added to $env_var: $abs_path"
     dbg "New $env_var: ${!env_var}"
   else
-    dbg "Ignored non-existing directory: $dir_path"
+    dbg "Ignored non-existing path: $path"
   fi
 }
 
