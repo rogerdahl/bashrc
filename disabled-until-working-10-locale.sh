@@ -23,7 +23,7 @@
 #  "$BASHRC_DIR/generate-locale.py"
 #}
 
-function unset-all-lc() {
+unset-all-lc() {
   for x in $(env | grep '^(LC|LANG|LANGUAGE|LOCPATH)$'); do
     echo "$x"
     unset "$(echo "$x" | perl -pe 's/=.*//')"

@@ -6,7 +6,7 @@ declare -A REQ_ARR
 export REQ_ARR
 
 # Add an apt package to the list of deps
-function requires() {
+requires() {
   pkg="$1"
   comment="$2"
   # shellcheck disable=SC2030
@@ -15,20 +15,20 @@ function requires() {
   REQ_ARR["$pkg"]="$comment"
 }
 
-function list_deps() {
+list-deps() {
   for req in "${!REQ_ARR[@]}"; do
     echo "$req (${REQ_ARR[$req]})"
   done
 }
 
 # Install any missing packages
-function pkg_install() {
+pkg-install() {
   [[ -n "${REQ_ARR[*]}" ]] || {
     sudo apt-get install --no-upgrade "${REQ_ARR[@]}"
   }
 }
 
-function pkg_is_installed() {
+pkg_is-installed() {
   return "$(dpkg-query -W -f '${Status}\n' "${1}" 2>&1 |
     awk '/ok installed/{print 0;exit}{print 1}')"
 }

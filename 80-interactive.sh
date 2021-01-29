@@ -1,6 +1,6 @@
-function watch-tree() { watch -n .5 --difference --color exa --long --tree --bytes --sort=time --reverse --color=always "$1"; }
+watch-tree() { watch -n .5 --difference --color exa --long --tree --bytes --sort=time --reverse --color=always "$1"; }
 
-# TODO: This pattern gives a nice progress bar while compressing. Make a function / alias.
+# TODO: This pattern gives a nice progress bar while compressing. Make a / alias.
 # tar -c dot-minders | xz -vv --lzma2=dict=192MiB big_foo.tar
 
 # Misc
@@ -16,7 +16,7 @@ alias wdf="watch -n 2 --color --differences df --type ext4"
 # Create relative symlink(s) to executable(s) in ~/bin
 alias sbin="ln -srft $HOME/bin"
 
-function dd() { dd if="$1" of="$2" bs=4M oflag=direct status=progress; }
+dd() { dd if="$1" of="$2" bs=4M oflag=direct status=progress; }
 
 # Show disk and memory usage
 alias f='df -h /dev/sd* | grep -v udev && echo && free -mh'
@@ -51,7 +51,7 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 # Grep with color, current dir, recursive, Perl compatible regexp
-function gr() { grep -R --perl-regex --color=always "$1" . | less --raw; }
+gr() { grep -R --perl-regex --color=always "$1" . | less --raw; }
 
 alias notheme='env GTK2_RC_FILES=/usr/share/themes/Mint-X-Teal/gtk-2.0/gtkrc'
 alias dcm2txt='for f in *.dcm; do dcmdump > $f.txt $f; done'
@@ -70,7 +70,7 @@ faketty() {
 }
 
 # Locate with ls -l on each result
-function locates() { locate -0 "$1" | xargs -0 --no-run-if-empty ls -ld; }
+locates() { locate -0 "$1" | xargs -0 --no-run-if-empty ls -ld; }
 
 #
 # Alias
@@ -100,8 +100,9 @@ alias rmempty='find . -empty -delete'
 alias nobuffer='stdbuf -i0 -o0 -e0'
 
 # rsync
-# Filtering: Remember the *** operator that was added in 2.6.7 (2006) and that 'dir/**' does not match dirs.
-# Copying only dirs d1 and d2: rs -f '+ d1/***' -f '+ d2/***' -f '- *'
+# Filtering: Remember the *** operator that was added in 2.6.7 (2006) and that 'dir/**'
+# does not match dirs. Copying only dirs d1 and d2:
+# $ rs -f '+ d1/***' -f '+ d2/***' -f '- *'
 RSYNC_ARGS='--recursive --links --times --info=progress2'
 # shellcheck disable=SC2139
 alias rs="rsync $RSYNC_ARGS"
@@ -116,7 +117,7 @@ alias lsblk='lsblk -o +uuid,label,hotplug,tran'
 
 locll() { locate -0 "$1" | xargs -0 ls -l; }
 
-#function pretty_csv {
+#pretty_csv {
 #    column -t -s, -n "$@" | less -F -S -X -K
 #}
 
@@ -129,8 +130,8 @@ alias tz='tar -c -I pxz -f'
 alias xml="xmlstarlet"
 
 # Create a compressed backup of a dir (recursive)
-function bak() {
-  is_installed 'pixz' || {
+bak() {
+  is-installed 'pixz' || {
     echo 'Missing pixz: sudo apt install pixz'
     return 1
   }

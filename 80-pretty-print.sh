@@ -14,23 +14,23 @@
 # keep running. can't be combined with --sample-ask as pytest suppresses prompts. can be combined with --sample-write
 
 # Log file
-function pl() { black - <"$1" | bat --language python; }
+pl() { black - <"$1" | bat --language python; }
 alias batlog='bat --paging=never --language python'
 # bat --style params: changes,grid,numbers,header,snip
 
 # XML doc (xmlstarlet + bat)
-function px() { xmlstarlet format "$1" | bat --language xml; }
+px() { xmlstarlet format "$1" | bat --language xml; }
 
 # Python (Black + bat)
-function pp() {
+pp() {
   black - <"$1" 2>/dev/null | bat --language python --style plain,changes,grid,numbers,snip
 }
 
 # Recursive egrep in current dir with context and color
-function g() { grep -i -r --color=always -C 10 "$1" . | less -R; }
+g() { grep -i -r --color=always -C 10 "$1" . | less -R; }
 
 # CSV (column + bat)
-function pcsv() {
+pcsv() {
   requires 'util-linux' # column
   requires 'bat'
 

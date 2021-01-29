@@ -4,7 +4,7 @@
 # Run in the root of the project.
 _esp_idf_path="$HOME/sdk/esp-idf"
 
-is_dir "$_esp_idf_path" && {
+is-dir "$_esp_idf_path" && {
   # Must be run from the same Python environment that it was installed in.
   # It's probably best to keep a separate venv only for ESP-IDF and set set it in the
   # root of ESP-IDF projects.
@@ -19,7 +19,7 @@ is_dir "$_esp_idf_path" && {
   export PY_ESP_IDF_VENV
 }
 
-function esp-idf-install() {
+esp-idf-install() {
   [[ -f "./sdkconfig" ]] || {
     echo 'Run this command in the root of an ESP-IDF project'
     echo '(Checked for and did not find "./sdkconfig")'
@@ -36,7 +36,7 @@ function esp-idf-install() {
   . "$ESP_IDF_PATH/export.sh"
 }
 
-function esp-idf-install-pip-deps() {
+esp-idf-install-pip-deps() {
   pip-install-core-packages
   pip install \
     "gdbgui==0.13.2.0" \

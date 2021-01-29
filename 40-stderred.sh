@@ -12,7 +12,7 @@ alias red-off='LD_PRELOAD_RED_OFF=$LD_PRELOAD; unset LD_PRELOAD'
 alias red-on='LD_PRELOAD=$LD_PRELOAD_RED_OFF; unset LD_PRELOAD_RED_OFF'
 
 # Check if stderred works. Prints a line of text to stderr, which should show up in red.
-function check-stderred() {
+check-stderred() {
   python <<EOF
 import sys;
 print("This line is written to stderr and should be colored red", file=sys.stderr);

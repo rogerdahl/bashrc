@@ -2,6 +2,10 @@
 
 # This script must be sourced: . init.sh
 
+# Implicitly export everything.
+set -a
+
+# Print source lines as they are executed.
 #set -x
 
 # True: Any non-empty string

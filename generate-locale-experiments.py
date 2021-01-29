@@ -31,7 +31,7 @@ CUSTOM_EN_US_PATH = pathlib.Path(LOCALE_PATH / (SYS_EN_US_PATH.name + '.custom')
 
 
 def main():
-    create_custom_common()
+    create_custom-common()
     subprocess.run(
         [
             'localedef',
@@ -50,7 +50,7 @@ def main():
     )
 
 
-def create_custom_common():
+def create_custom-common():
     shutil.copy(SYS_EN_US_PATH, CUSTOM_EN_US_PATH)
 
     with CUSTOM_COMMON_PATH.open('w') as mod:

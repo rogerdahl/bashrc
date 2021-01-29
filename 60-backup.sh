@@ -5,7 +5,7 @@ requires 'pixz' 'parallel xz'
 # Create a backup of a directory tree or single file.
 # This is just a convenience wrapper around tar and pixz. The backup file is stored in
 # the same dir as the item being backed up.
-function bak() {
+bak() {
     [[ $# -eq 1 ]] || { echo "Usage: $1 <root dir or single file to backup>"; return 1; }
     src="${1}";
     [[ -e ${src} ]]   || { echo "Source does not exist: ${src}"; return 1; };

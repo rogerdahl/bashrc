@@ -2,9 +2,9 @@
 # These do better color highlighting and most (all?) have integrated GIT support.
 
 # ripgrep with paging
-is_installed rg && {
+is-installed rg && {
   # Pretty print with syntax highlight colors preserved
-  function rgp() { rg --pretty "$@" | less -r; }
+  rgp() { rg --pretty "$@" | less -r; }
   # Print only the maths of files with one or more matches
   alias rg-path='rg --files-with-matches'
 } || {
@@ -12,7 +12,7 @@ is_installed rg && {
 }
 
 # Bat, the amazing cat with wings.
-is_installed 'bat' && {
+is-installed 'bat' && {
   alias b='bat'
   alias br='bat --decorations=never'
   alias bp='bat --language=python'
@@ -23,7 +23,7 @@ is_installed 'bat' && {
 # If ll in a git repo is slow, run 'git gc --aggressive'
 # shellcheck disable=SC2139
 case $(
-  is_installed 'exa'
+  is-installed 'exa'
   echo -n "$?"
 ) in
 0)
@@ -44,14 +44,15 @@ case $(
   ;;
 esac
 
-is_installed 'nvim' && {
+is-installed 'nvim' && {
   alias vim='nvim'
 }
 
 # Automatic ls after cd
 # Must run after the ll alias is defined.
-function ls_after_cd() {
+ls-after-cd() {
   test "$prev" != "$PWD" -a -n "$prev" && ll
   prev="$PWD"
 }
-PROMPT_COMMAND=ls_after_cd
+PROMPT_COMMAND=ls-after-cd
+
