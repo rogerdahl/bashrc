@@ -2,7 +2,7 @@
 # These do better color highlighting and most (all?) have integrated GIT support.
 
 # ripgrep with paging
-is-installed rg && {
+is_installed rg && {
   # Pretty print with syntax highlight colors preserved
   rgp() { rg --pretty "$@" | less -r; }
   # Print only the maths of files with one or more matches
@@ -11,8 +11,8 @@ is-installed rg && {
   echo 'ripgrep not installed'
 }
 
-# Bat, the amazing cat with wings.
-is-installed 'bat' && {
+# Use bat instead of cat if available
+is_installed 'bat' && {
   alias b='bat'
   alias br='bat --decorations=never'
   alias bp='bat --language=python'
@@ -54,5 +54,4 @@ ls-after-cd() {
   test "$prev" != "$PWD" -a -n "$prev" && ll
   prev="$PWD"
 }
-PROMPT_COMMAND=ls-after-cd
-
+PROMPT_COMMAND=ls_after_cd

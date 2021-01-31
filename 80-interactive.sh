@@ -1,4 +1,4 @@
-watch-tree() { watch -n .5 --difference --color exa --long --tree --bytes --sort=time --reverse --color=always "$1"; }
+watch_tree() { watch -n .5 --difference --color exa --long --tree --bytes --sort=time --reverse --color=always "$1"; }
 
 # TODO: This pattern gives a nice progress bar while compressing. Make a / alias.
 # tar -c dot-minders | xz -vv --lzma2=dict=192MiB big_foo.tar
@@ -35,7 +35,7 @@ esac
 
 #XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/dahl/.local/share/flatpak/exports/share${XDG_DATA_DIRS:+:${XDG_DATA_DIRS}}"; export XDG_DATA_DIRS;
 
-alias m4b-tool='docker run -it --rm -u $(id -u):$(id -g) -v "$(pwd)":/mnt m4b-tool'
+alias m4b_tool='docker run -it --rm -u $(id -u):$(id -g) -v "$(pwd)":/mnt m4b-tool'
 
 # MP3, ID3
 
@@ -106,7 +106,8 @@ alias nobuffer='stdbuf -i0 -o0 -e0'
 RSYNC_ARGS='--recursive --links --times --info=progress2'
 # shellcheck disable=SC2139
 alias rs="rsync $RSYNC_ARGS"
-
+# shellcheck disable=SC2139
+alias rs_mv="rsync $RSYNC_ARGS --remove-source-files"
 # Case insensitive search in man pages
 alias man='man -i'
 
@@ -131,7 +132,7 @@ alias xml="xmlstarlet"
 
 # Create a compressed backup of a dir (recursive)
 bak() {
-  is-installed 'pixz' || {
+  is_installed 'pixz' || {
     echo 'Missing pixz: sudo apt install pixz'
     return 1
   }

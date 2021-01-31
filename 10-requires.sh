@@ -17,31 +17,20 @@ require() {
   return $missing
 }
 
-# Add an apt package to the list of deps
-#requires() {
-#  pkg="$1"
-#  comment="$2"
-#  # shellcheck disable=SC2030
-#  echo "Requires: ${pkg}$([[ -n "$comment" ]] && echo -n " ($comment)"; )"
-#  # shellcheck disable=SC2031
-#  REQ_ARR["$pkg"]="$comment"
-#}
-
-list-deps() {
-  for pkg in "${!REQ_ARR[@]}"; do
-    echo "$pkg (${REQ_ARR[$pkg]})"
+function list_deps() {
+  for req in "${!REQ_ARR[@]}"; do
+    echo "$req (${REQ_ARR[$req]})"
   done
 }
 
 # Install any missing packages
-pkg-install() {
+function pkg_install() {
   [[ -n "${REQ_ARR[*]}" ]] || {
     sudo apt-get install --no-upgrade "${REQ_ARR[@]}"
   }
 }
 
-pkg-is-installed() {
+function pkg_is_installed() {
   return "$(dpkg-query -W -f '${Status}\n' "${1}" 2>&1 |
     awk '/ok installed/{print 0;exit}{print 1}')"
 }
-
