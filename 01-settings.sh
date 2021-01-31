@@ -3,7 +3,9 @@
 # True: Any non-empty string
 export BASHRC_DEBUG="y"
 
-# Settings for ls, du and other commands from the coreutils package.
+# Base settings for ls, du and other commands from the coreutils package.
+#
+# To add to these instead of overwriting them, use 'add_str'.
 
 # Group file sizes by thousands
 export BLOCK_SIZE="'1"
@@ -15,7 +17,5 @@ export TIME_STYLE='+%Y-%m-%d %H:%M:%S'
 # and pass though ANSI color codes.
 export LESS="${LESS}j5 -R"
 
-
 # Enabled multithreading for xz
 export XZ_OPT="--threads=16"
-
