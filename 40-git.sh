@@ -29,19 +29,3 @@ function git_bashrc_pull() (
   cd "$BASHRC_DIR" || exit
   git pull
 )
-
-alias git_show_remote='git config --get remote.origin.url'
-
-# Dangerous!
-
-# Merge all commits in the repository to a single commit called, "Initial work".
-#
-# This removes all history from the git repository. I usually don't track changes on
-# initial work on a project. I use this function when a project reaches a state where I
-# want to more formally start tracking changes.
-#alias git_danger_squash_all_commits_to_one="git reset $\(git commit-tree HEAD^{tree} -m 'Initial work'\) && git push -f"
-alias dangerous_git_squash_all_commits_to_one() {
-  first_commit=$(git commit-tree HEAD^{tree} -m 'Initial work')
-  git reset "$first_commit"
-  # git push -f"
-}

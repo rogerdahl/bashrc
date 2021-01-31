@@ -1,6 +1,6 @@
 # Backups
 
-requires 'pixz' 'parallel xz'
+require 'pixz' 'parallel xz'
 
 # Create a backup of a directory tree or single file.
 # This is just a convenience wrapper around tar and pixz. The backup file is stored in

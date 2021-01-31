@@ -4,7 +4,7 @@
 # Run in the root of the project.
 _esp_idf_path="$HOME/sdk/esp-idf"
 
-is-dir "$_esp_idf_path" && {
+is_dir "$_esp_idf_path" && {
   # Must be run from the same Python environment that it was installed in.
   # It's probably best to keep a separate venv only for ESP-IDF and set set it in the
   # root of ESP-IDF projects.
@@ -19,16 +19,16 @@ is-dir "$_esp_idf_path" && {
   export PY_ESP_IDF_VENV
 }
 
-esp-idf-install() {
+esp_idf_install() {
   [[ -f "./sdkconfig" ]] || {
     echo 'Run this command in the root of an ESP-IDF project'
     echo '(Checked for and did not find "./sdkconfig")'
     return 1
   }
-  pyenv-setup
-  pyenv-is-installed-venv "$PY_ESP_IDF_VENV" || {
-    PY_LATEST_VER="$(pyenv-find-latest-py-ver)"
-    pyenv-install-venv "$PY_LATEST_VER" "$PY_PY_ESP_IDF_VENV"
+  pyenv_setup
+  pyenv-is_installed-venv "$PY_ESP_IDF_VENV" || {
+    PY_LATEST_VER="$(pyenv_find_latest_py_ver)"
+    pyenv_install_venv "$PY_LATEST_VER" "$PY_PY_ESP_IDF_VENV"
   }
   pyenv local "$PY_PY_ESP_IDF_VENV"
   "$ESP_IDF_PATH/install.sh"
@@ -36,8 +36,8 @@ esp-idf-install() {
   . "$ESP_IDF_PATH/export.sh"
 }
 
-esp-idf-install-pip-deps() {
-  pip-install-core-packages
+esp_idf_install-pip-deps() {
+  pip_install_core-packages
   pip install \
     "gdbgui==0.13.2.0" \
     "pygdbmi<=0.9.0.2" \

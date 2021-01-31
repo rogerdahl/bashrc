@@ -149,8 +149,3 @@ bak() {
   echo "Creating backup: ${src} -> ${dst}"
   tar --use-compress-program=pixz -cf "${dst}" "${src}"
 }
-
-# Print current date and time on a form similar to ISO 8601.
-# shellcheck disable=SC2139
-alias now="date \"$TIME_STYLE\""
-

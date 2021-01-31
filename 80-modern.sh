@@ -11,7 +11,7 @@ is_installed rg && {
   echo 'ripgrep not installed'
 }
 
-# Use bat instead of cat if available
+# Bat, the amazing cat with wings.
 is_installed 'bat' && {
   alias b='bat'
   alias br='bat --decorations=never'
@@ -23,7 +23,7 @@ is_installed 'bat' && {
 # If ll in a git repo is slow, run 'git gc --aggressive'
 # shellcheck disable=SC2139
 case $(
-  is-installed 'exa'
+  is_installed 'exa'
   echo -n "$?"
 ) in
 0)
@@ -44,14 +44,15 @@ case $(
   ;;
 esac
 
-is-installed 'nvim' && {
+is_installed 'nvim' && {
   alias vim='nvim'
 }
 
 # Automatic ls after cd
 # Must run after the ll alias is defined.
-ls-after-cd() {
+ls_after_cd() {
   test "$prev" != "$PWD" -a -n "$prev" && ll
   prev="$PWD"
 }
 PROMPT_COMMAND=ls_after_cd
+

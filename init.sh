@@ -8,14 +8,9 @@ set -a
 # Print source lines as they are executed.
 #set -x
 
-# True: Any non-empty string
-export BASHRC_DEBUG="y"
+# BASHRC_DEBUG is set in 01-settings.py.
 
-[[ "$0" == "${BASH_SOURCE[0]}" ]] && {
-  echo "This script must be sourced: . $0"
-  chmod a-x "$0"
-  exit
-}
+assert_is_sourced
 
 # Skip configuration if not running interactively.
 [[ $- == *i* ]] || return

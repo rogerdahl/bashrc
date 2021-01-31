@@ -31,10 +31,17 @@ g() { grep -i -r --color=always -C 10 "$1" . | less -R; }
 
 # CSV (column + bat)
 pcsv() {
-  requires 'util-linux' # column
-  requires 'bat'
+  require 'util-linux' # column
+  require 'bat'
 
   column -t -s, -n "$1" |
     bat --wrap never --language python --pager \
       "less --no-init --quit-if-one-screen --chop-long-lines --quit-on-intr --RAW-CONTROL-CHARS"
 }
+
+# GNU Source-highlight
+require source-highlight
+LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+padd '-R' ' '
+export LESSOPEN LESS
+

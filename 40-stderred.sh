@@ -12,22 +12,31 @@ red_disabled="$red_root/DISABLED"
 new_build="0"
 
 # Check if stderred works. Prints a line of text to stderr, which should show up in red.
-check-stderred() {
+check_stderred() {
   python <<EOF
 import sys;
 print("This line is written to stderr and should be colored red", file=sys.stderr);
 EOF
 }
 
+clean_stderred() {
+  rm -rf "$red_root/DISABLED"
+  rm -rf "$red_root/build/"
+  unset LD_PRELOAD
+}
+
 # Exit silently if stderred has been disabled or compile failed.
 # To retry the build, remove the 'stderred/DISABLED' file and reload.
-[[ -e "$red_disabled" ]] && return 0
+[[ -e "$red_disabled" ]] && {
+  debug "Skipping 'stderred' (disabled)."
+  return 0
+}
 
 [[ ! -f "$red_so" ]] && (
   new_build="1"
   build_error="0"
-
-  if [[ ($(require 'build-essential' 'cmake')) ]]; then
+  require 'build-essential' 'cmake'
+  if [[ $? -ne 0 ]]; then
     build_error="1"
   else
     cd "$red_root"
@@ -44,7 +53,7 @@ EOF
     return 1
   }
 
-  check-stderred
+  check_stderred
 )
 
 padd "$red_so" 'LD_PRELOAD'

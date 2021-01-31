@@ -1,3 +1,8 @@
+# Global settings
+
+# True: Any non-empty string
+export BASHRC_DEBUG="y"
+
 # Settings for ls, du and other commands from the coreutils package.
 
 # Group file sizes by thousands
