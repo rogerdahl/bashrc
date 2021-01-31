@@ -50,7 +50,7 @@ is-installed 'nvim' && {
 
 # Automatic ls after cd
 # Must run after the ll alias is defined.
-ls-after-cd() {
+ls_after_cd() {
   test "$prev" != "$PWD" -a -n "$prev" && ll
   prev="$PWD"
 }
