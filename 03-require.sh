@@ -11,7 +11,7 @@ export REQ_ARR
 require() {
   missing=0
   for pkg in "$@"; do
-    pkg-is_installed "$pkg"
+    pkg_is_installed "$pkg"
     [[ $? -ne 0 ]] && {
       echo "Missing package: $pkg"
       missing=1
@@ -36,17 +36,20 @@ list_deps() {
   done
 }
 
-# Install any missing packages
-pkg_install() {
+# Install any missing packages.
+pkg_install_missing() {
   [[ -n "${REQ_ARR[*]}" ]] || {
-    sudo apt_get install --no-upgrade "${REQ_ARR[@]}"
+    pkg_install "${REQ_ARR[@]}"
   }
 }
 
+# Install a list of packages.
+pkg_install() {
+  sudo apt-get install --no-upgrade --yes "$@"
+}
+
 # Exit with status 0 (exists) or 1 (does not exist) for a given package name.
-pkg-is_installed() {
-#  return "$(dpkg-query -W -f '${Status}\n' "${1}" 2>&1 |
-#    awk '/ok installed/{print 0;exit}{print 1}')"
+pkg_is_installed() {
   q="$(dpkg-query -W -f '${Status}\n' "${1}" 2>&1)"
   [[ "$q" =~ is\ installed ]] && return 1
   return 0

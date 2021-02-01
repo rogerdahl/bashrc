@@ -40,18 +40,6 @@ You should then move any custom goodies from your `~/.bashrc` (now at `~/bin/bas
 
 This intended for use in shared accounts. It doesn't modify the original `~/.bashrc`
 
-```shell script
-$ bash -c '
-  set -x
-  BASHRC_DIR="$HOME/bin/bashrc.d2"
-  mkdir -p "$BASHRC_DIR"
-  git clone "git@github.com:rogerdahl/bashrc.git" "$BASHRC_DIR"
-  echo >> "$HOME/.bashrc" "export BASHRC_DIR=\"\$HOME/$BASHRC_REL_DIR\""
-  echo >> "$HOME/.bashrc" ". \"\$HOME/$BASHRC_REL_DIR/init.sh\""
-  mv "$HOME"/.bashrc "$"
-  exec bash
-'
-```
 
 ## Helpful hints
 
