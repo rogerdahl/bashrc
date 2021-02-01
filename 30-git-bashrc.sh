@@ -17,6 +17,11 @@ bashrc_push() (
   git push
 )
 
+tt() {
+  echo +([0-9][0-9]-*.sh)
+}
+
+
 ## git pull bashrc.d
 ## Using a subshell, so the interactive CWD does not change.
 #bashrc_pull() (
