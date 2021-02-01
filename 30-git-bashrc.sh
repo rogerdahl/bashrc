@@ -22,5 +22,5 @@ bashrc_push() {
 # Using a subshell, so the interactive CWD does not change.
 bashrc_pull() (
   bashrc_cd || return 1
-  git push
+  git pull
 )
