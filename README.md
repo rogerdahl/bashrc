@@ -33,11 +33,6 @@ You should then move any custom goodies from your `~/.bashrc` (now at `~/bin/bas
 - After logging in, activate `bashrc.d` with `. ~/bin/bashrc.d/bashrc`. This can be added as a quick alias by adding `alias rcd='. ~/bin/bashrc.d/bashrc'` to the end of `~/.bashrc.d`.
 
 
-- To get `bashrc.d` into the shell, 
-
-- To 
-
-
 This intended for use in shared accounts. It doesn't modify the original `~/.bashrc`
 
 
@@ -59,11 +54,16 @@ This intended for use in shared accounts. It doesn't modify the original `~/.bas
 
 * In addition to describing the order in which the scripts are sourced, the leading two digits also describe categories, as follows:
 
-- `00 - 09` - Settings and basic utils
+- `00 - 09` - Reserved for local use
+- `10 - 19` - Basic settings and utilities useful in both interactive shell and scripts
 - `30 - 39` - Set up development and build environments
 - `60 - 69` - Shortcuts and convenience commands for working in the shell
 - `80 - 89` - GUI related scripting / automation
-- `90 - 99` - Reserved for local setup tasks
+- `90 - 99` - Reserved for local use
+
+
+. Can be sourced independently with `. .util.sh`.
+
 
 # Features
 

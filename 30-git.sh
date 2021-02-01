@@ -1,11 +1,6 @@
 # Git
 
-. 01-settings.sh
-. 01-settings-bash.sh
-. 02-base-util.sh
-. 03-require.sh
-. 04-coreutils.sh
-. 05-util.sh
+. "$BASHRC_DIR/util.sh"
 
 # Alias
 
