@@ -7,7 +7,7 @@ require 'pixz' # parallel xz
 # the same dir as the item being backed up.
 bak() {
   [[ $# -eq 1 ]] || {
-    echo "Usage: $1 <root dir or single file to backup>"
+    echo "Usage: $0 <root dir or single file to backup>"
     return 1
   }
   src="${1}"

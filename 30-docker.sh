@@ -2,9 +2,9 @@
 
 # Install Docker CE
 docker_install() {
-  sudo apt_get update
+  sudo apt-get update
 
-  sudo apt_get install -y \
+  sudo apt-get install -y \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -20,8 +20,8 @@ docker_install() {
     echo "$UBUNTU_CODENAME"
   ) stable"
 
-  sudo apt_get update
-  sudo apt_get install -y docker-ce
+  sudo apt-get update
+  sudo apt-get install -y docker-ce
 
   sudo usermod -aG docker $USER
   newgrp docker

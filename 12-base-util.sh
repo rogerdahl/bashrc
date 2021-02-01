@@ -64,7 +64,8 @@ nowfn() {
 
 # Returns the absolute path to the directory of the caller.
 # - Works when invoked from another script.
-# - Works wherever it is called from.
+# - Works with any relationship between CWD of the caller and the script holding the
+#   function.
 # - Works only from executed script, NOT from sourced script or interactive shell.
 # - Notes:
 # - Most solutions for this found online assume that the function and the caller are in
@@ -76,10 +77,41 @@ nowfn() {
 #   it is called from. The location of the script holding function is not relevant.
 here() {
   echo -n "$(dirname "$(readlink -f $0)")"
-#  echo -n "$(dirname $(readlink -f $0))"
+  #  echo -n "$(dirname $(readlink -f $0))"
 }
 
 here_sourced() {
   echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 }
 
+# Using the presence of a file to flag some condition.
+
+is_flag() {
+  [[ $# -eq 2 ]] || {
+    echo "Usage: $0 <component> <flag name>"
+    return 1
+  }
+  is_file "$BASHRC_DIR/$1/${2^^}" && {
+    dbg "$1 is ${2,,}"
+    return 0
+  }
+  return 1
+}
+
+set_flag() {
+  [[ $# -eq 2 ]] || {
+    echo "Usage: $0 <component> <flag name>"
+    return 1
+  }
+  mkdir -p "$BASHRC_DIR/$1"
+  touch "$BASHRC_DIR/$1/${2^^}"
+}
+
+clear_flag() {
+  [[ $# -eq 2 ]] || {
+    echo "Usage: $0 <component> <flag name>"
+    return 1
+  }
+  [[ -n "$1" ]] || exit # Making sure we don't wipe out the root dir for now
+  rm -f "$BASHRC_DIR/$1/${2^^}"
+}

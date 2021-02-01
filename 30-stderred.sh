@@ -48,8 +48,8 @@ red_build() {
 }
 
 # Exit silently if stderred has been disabled or a previous compile failed.
-[[ -e "$red_disabled" ]] && {
-  debug "Skipping 'stderred' (disabled). To retry, type 'red_build'"
+is_file "$red_disabled" && {
+  dbg "Skipping 'stderred' (disabled). To retry, type 'red_build'"
   return 0
 }
 
