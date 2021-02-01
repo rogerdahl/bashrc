@@ -13,7 +13,7 @@ bashrc_cd() {
 bashrc_push() {
   bashrc_cd || return 1
   # The extglob (regex glob) must not be quoted.
-  echo +([0-9][0-9]-*.sh)
+  git add +([0-9][0-9]-*.sh)
   git commit -a -m 'Initial work'
   git push
 }
