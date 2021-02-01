@@ -53,11 +53,10 @@ red_build() {
   return 0
 }
 
-red_is_compiled
-[[ ! -f "$red_so" ]] && (
+red_is_compiled || {
   red_build
   red_test
-)
+}
 
 padd "$red_so" 'LD_PRELOAD'
 
