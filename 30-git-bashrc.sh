@@ -11,15 +11,16 @@ bashrc_cd() {
 # Using a subshell, so the interactive CWD does not change.
 bashrc_push() (
   bashrc_cd || return 1
-  git add "+([0-9][0-9]-*.sh)"
+  # The regex glob must not be quoted.
+  git add +\([0-9][0-9]-*.sh\)
   git commit -a -m 'Initial work'
   git push
 )
 
-# git pull bashrc.d
-# Using a subshell, so the interactive CWD does not change.
-bashrc_pull() (
-  bashrc_cd || return 1
-  git push
-)
-
+## git pull bashrc.d
+## Using a subshell, so the interactive CWD does not change.
+#bashrc_pull() (
+#  bashrc_cd || return 1
+#  git push
+#)
+#
