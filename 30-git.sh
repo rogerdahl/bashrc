@@ -17,15 +17,5 @@ alias gfix="git add /home/dahl/dev/d1_python/test_utilities/src/d1_test/test_doc
 # Generate changelog.md base from git log
 
 #
-function git_changelog() { git log --format="%n* %s%n    * %b" $1 >>CHANGELOG.md; }
+git_changelog() { git log --format="%n* %s%n    * %b" $1 >>CHANGELOG.md; }
 
-function git_bashrc_push() (
-  cd "$BASHRC_DIR" || exit
-  git commit -a -m 'Initial work'
-  git push
-)
-
-function git_bashrc_pull() (
-  cd "$BASHRC_DIR" || exit
-  git pull
-)

@@ -42,6 +42,5 @@ pcsv() {
 # GNU Source-highlight
 require source-highlight
 LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
-padd '-R' ' '
+add_str '-R' ' ' LESS
 export LESSOPEN LESS
-

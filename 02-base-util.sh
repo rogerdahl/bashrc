@@ -14,7 +14,7 @@ dbg() {
 
 # Return true if the script is sourced (invoked with "source <script>" or ". <script>".
 is_sourced() {
-  [[ "$0" == "${BASH_SOURCE[0]}" ]] && return 0 || return 1
+  [[ "$0" != "${BASH_SOURCE[0]}" ]] && return 0 || return 1
 }
 
 is_installed() {

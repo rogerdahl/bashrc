@@ -36,6 +36,8 @@ padd() {
 }
 
 # Add string to the front of a delimited list in an env var.
+# To use for argument lists, pass a single space, " ", as the delimiter.
+# The env var is created if it doesn't already exist.
 # TODO: Option for ignoring duplicate entry
 # TODO: Call this from padd.
 add_str() {

@@ -2,6 +2,9 @@
 
 # This script must be sourced: . init.sh
 
+# Silently skip configuration if not running interactively.
+[[ $- == *i* ]] || return
+
 # Implicitly export everything.
 set -a
 
@@ -12,10 +15,23 @@ set -a
 
 assert_is_sourced
 
-# Skip configuration if not running interactively.
-[[ $- == *i* ]] || return
 
 echo 'bashrc.d...'
+
+
+[[ -n "$BASHRC_DIR" ]] || {
+  BASHRC_DIR="$(dirname "$0")"
+}
+
+for sh in "$BASHRC_DIR"/*.sh; do
+  debug "$sh"
+  [[ ! "$(basename "$sh")" =~ ^[0-9][0-9]-.* ]] && {
+    [[ -n "$BASHRC_DEBUG" ]] && debug 'ignored'
+    continue
+  }
+  # shellcheck disable=SC1090
+  source "$sh"
+done
 
 # Display 'last' info for login shells
 shopt -q login_shell && {
@@ -23,16 +39,3 @@ shopt -q login_shell && {
     <(last --hostlast --dns --time-format iso --present now --fullnames -3 | tac)
 }
 
-[[ -n "$BASHRC_DIR" ]] || {
-  BASHRC_DIR="$(dirname "$0")"
-}
-
-for sh in "$BASHRC_DIR"/*.sh; do
-  [[ -n "$BASHRC_DEBUG" ]] && echo "$sh"
-  [[ ! "$(basename "$sh")" =~ ^[0-9][0-9]-.* ]] && {
-    [[ -n "$BASHRC_DEBUG" ]] && echo 'ignored'
-    continue
-  }
-  # shellcheck disable=SC1090
-  source "$sh"
-done
