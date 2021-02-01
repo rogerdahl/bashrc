@@ -26,7 +26,7 @@ red_clean() {
 }
 
 red_is_compiled() {
-  return [[ -f "$red_so" ]]
+  [[ -f "$red_so" ]] && return 0 || return 1
 }
 
 red_build() {
