@@ -1,5 +1,8 @@
 # Shortcuts for dealing with .bashrc itself.
 
+#shopt -s extglob
+
+
 bashrc_cd() {
   cd "$BASHRC_DIR" || {
     echo "Error: It doesn't look like we're in a bashrc.d environment (missing \$BASHRC_DIR)"
@@ -8,9 +11,11 @@ bashrc_cd() {
 }
 
 # git add all numbered bashrc.d scripts and push
-1# Using a subshell, so the interactive CWD does not change.
+# Using a subshell, so the interactive CWD does not change.
 # This somehow breaks implicit exports with "set -a" ?
 bashrc_push() {
+#  shopt -s extglob
+
   bashrc_cd || return 1
   # The extglob (regex glob) must not be quoted.
   git add +([0-9][0-9]-*.sh)
