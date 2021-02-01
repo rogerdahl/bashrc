@@ -129,23 +129,3 @@ alias tz='tar -c -I pxz -f'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 alias xml="xmlstarlet"
-
-# Create a compressed backup of a dir (recursive)
-bak() {
-  is_installed 'pixz' || {
-    echo 'Missing pixz: sudo apt install pixz'
-    return 1
-  }
-  src="${1}"
-  [[ -e ${src} ]] || {
-    echo "Source does not exist: ${src}"
-    return 1
-  }
-  dst="$(basename "${src}")-bak-$(now).txz"
-  [[ ! -e ${dst} ]] || {
-    echo "Backup already exists: ${dst}"
-    return 1
-  }
-  echo "Creating backup: ${src} -> ${dst}"
-  tar --use-compress-program=pixz -cf "${dst}" "${src}"
-}
