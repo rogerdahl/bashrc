@@ -25,13 +25,13 @@ alias m4b-tool='docker run -it --rm -u $(id -u):$(id -g) -v "$(pwd)":/mnt m4b-to
 
 alias trash-empty='gio trash --empty'
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm* | rxvt*)
-  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h \w\a\]$PS1"
-  ;;
-*) ;;
-esac
+## If this is an xterm set the title to user@host:dir
+#case "$TERM" in
+#xterm* | rxvt*)
+#  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h \w\a\]$PS1"
+#  ;;
+#*) ;;
+#esac
 
 #XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/dahl/.local/share/flatpak/exports/share${XDG_DATA_DIRS:+:${XDG_DATA_DIRS}}"; export XDG_DATA_DIRS;
 

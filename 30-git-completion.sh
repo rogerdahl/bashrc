@@ -1,4 +1,4 @@
-# Git completion
+# Git completion and prompt
 
 # When working, "git<tab><tab>" on the command line will show a list of git commands.
 # Switches are also completed. "git diff --<tab><tab>".
@@ -41,4 +41,6 @@ is_ready || {
 . "$git_prompt"
 
 # shellcheck disable=SC2016
-add_str "\$(__git_ps1)" ' ' 'PS1'
+#add_str "\$(__git_ps1)" '' 'PS1'
+PS1="$(__git_ps1 "(%s)" ) $PS1"
+export PS1
