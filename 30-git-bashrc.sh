@@ -9,18 +9,18 @@ bashrc_cd() {
 
 # git add all numbered bashrc.d scripts and push
 # Using a subshell, so the interactive CWD does not change.
-bashrc_push() (
+bashrc_push() {
   bashrc_cd || return 1
   # The regex glob must not be quoted.
-  git add +\([0-9][0-9]-*.sh\)
+  echo +\([0-9][0-9]-*.sh\)
+  #  git add +\([0-9][0-9]-*.sh\)
   git commit -a -m 'Initial work'
   git push
-)
-
-tt() {
-  echo +([0-9][0-9]-*.sh)
 }
 
+#tt() {
+#  echo +([0-9][0-9]-*.sh)
+#}
 
 ## git pull bashrc.d
 ## Using a subshell, so the interactive CWD does not change.

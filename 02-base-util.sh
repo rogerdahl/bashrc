@@ -8,6 +8,8 @@ debug() { echo -e "\e[32mDEBUG  \e[39m ${*}"; }
 warn() { echo -e "\e[33mWARNING\e[39m ${*}"; }
 error() { echo -e "\e[31mERROR  \e[39m ${*}"; }
 nln() { echo ""; }
+
+# Debugging for bashrc.d itself.
 dbg() {
   [[ -n "${BASHRC_DEBUG}" ]] && debug "$@"
 }
@@ -61,12 +63,23 @@ nowfn() {
 }
 
 # Returns the absolute path to the directory of the caller.
+# - Works when invoked from another script.
+# - Works wherever it is called from.
 # - Works only from executed script, NOT from sourced script or interactive shell.
+# - Notes:
+# - Most solutions for this found online assume that the function and the caller are in
+#   the same script, and break if the function is defined in another script.
 # - The solution at https://stackoverflow.com/a/246128/442006 works only if current dir
 #   is the same as the script that defines the function. For it work in any dir, the
 #   function must be copied into the calling script.
 # - This solution, from https://gist.github.com/tvlooy/cbfbdb111a4ebad8b93e, works wherever
 #   it is called from. The location of the script holding function is not relevant.
 here() {
-  echo -n "$(dirname $(readlink -f $0))"
+  echo -n "$(dirname "$(readlink -f $0)")"
+#  echo -n "$(dirname $(readlink -f $0))"
 }
+
+here_sourced() {
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+}
+

@@ -2,31 +2,43 @@
 
 # This script must be sourced: . init.sh
 
+# As the numbered scripts have not been sourced yet, we keep this script minimal and
+# self-contained.
+
 # Silently skip configuration if not running interactively.
 [[ $- == *i* ]] || return
 
+here_sourced() {
+  echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+}
+
+# Skip with error if not sourced.
+[[ "$0" != "${BASH_SOURCE[0]}" ]] || {
+  echo >&2 "This script must be sourced: . $0"
+  chmod a-x "$0"
+  exit
+}
+
+echo 'bashrc.d...'
+
 # Implicitly export everything.
-set -a
+#set -a
 
 # Print source lines as they are executed.
 #set -x
 
-# BASHRC_DEBUG is set in 01-settings.py.
+# This dir should be used by bashrc.d scripts when building internal paths.
+BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+#echo "\$BASHRC_DIR=$BASHRC_DIR"
 
-assert_is_sourced
-
-
-echo 'bashrc.d...'
-
-
-[[ -n "$BASHRC_DIR" ]] || {
-  BASHRC_DIR="$(dirname "$0")"
+dbg() {
+  [[ -n "${BASHRC_DEBUG}" ]] && echo "$@"
 }
 
 for sh in "$BASHRC_DIR"/*.sh; do
-  debug "$sh"
+  dbg "$sh"
   [[ ! "$(basename "$sh")" =~ ^[0-9][0-9]-.* ]] && {
-    [[ -n "$BASHRC_DEBUG" ]] && debug 'ignored'
+    [[ -n "$BASHRC_DEBUG" ]] && dbg 'ignored'
     continue
   }
   # shellcheck disable=SC1090

@@ -12,8 +12,8 @@ assert_is_sourced() {
   is_sourced || {
     error "This script must be sourced: . $0"
     chmod a-x "$0"
-    # `exit` in a sourced script causes the user's shell to be closed, but we can safely
-    # use it here since we now know we are not sourced.
+    # `exit` in a sourced script causes the user's interactive shell to be closed, but
+    # we can safely use it here since we now know we are not sourced.
     exit
   }
 }
