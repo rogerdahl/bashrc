@@ -41,10 +41,12 @@ sep() {
 
 # Debugging for bashrc.d itself.
 dbg() {
-	[[ -n "$BASHRC_DEBUG" ]] && debug "${*}"
+  #  printf "%s" "${*}"
+	(( BASHRC_DEBUG )) && debug "${*}"
 }
+
 dbg_sep() {
-	debug "$(sep 8)"
+	dbg "$(sep 8)"
 }
 
 # Return true if the script is sourced (invoked with "source <script>" or ". <script>".
@@ -112,7 +114,7 @@ here() {
 # Get the absolute path to the directory of the caller.
 # - Use from sourced script or interactive shell, NOT from executed  script or
 #   interactive shell.
-# TODO: Check again. Doesn't work.
+# TODO: Check again. Doesn't work?
 here_sourced() {
 	echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 }
@@ -157,13 +159,23 @@ clear_flag() {
 # - To use for argument lists, pass a single space, " ", as the delimiter. The env var
 # is created if it doesn't already exist.
 add_str() {
-	[[ "$#" -ne 4 ]] || {
-		# shellcheck disable=SC2016
-		echo "Usage: $0 <string to add> <delimiter> <env var name (no \$)>"
-		return 1
-	}
 
-	[[ -n "$env_var" ]] || return
+	# shellcheck disable=SC2034
+	__in=("$@")
+	# shellcheck disable=SC2034
+	__args=('env var name (without dollar sign)' 'string to add' 'delimiter')
+	usage __in __args || return 1
+
+#  echo 1
+#	[[ "$#" -ne 4 ]] && {
+#	  echo 3
+#		# shellcheck disable=SC2016
+#		echo "Usage: $0 <env var name (without dollar sign)> <string to add> <delimiter>"
+#		return 1
+#	}
+#  echo 2
+
+#	[[ -n "$env_var" ]] || return
 
 	local env_var="$1"
 	local str="$2"
@@ -186,8 +198,7 @@ add_str() {
 			# - `${!var}` is indirect variable read.
 			# - `printf -v var` is indirect variable write.
 			printf -v "$env_var" "%s" "${str}${!env_var:+${del}${!env_var}}"
-			dbg "Added to \$$env_var: \"$str\""
-			dbg "-> ${!env_var}"
+			dbg "Added to \$$env_var: \"$str\" -> ${!env_var}"
 			export "${env_var?}"
 		fi
 	else
@@ -216,13 +227,13 @@ usage() {
 	local -n __arg_arr=$1
 	local -n __name_arr=$2
 	local __func_name="${FUNCNAME[1]}"
-	dbg 'args:' "${__arg_arr[@]}"
-	dbg 'names:' "${__name_arr[@]}"
-	dbg 'len args:' ${#__arg_arr[@]}
-	dbg 'len names:' "${#__name_arr[@]}"
+  #	dbg 'args:' "${__arg_arr[@]}"
+  #	dbg 'names:' "${__name_arr[@]}"
+  #	dbg 'len args:' ${#__arg_arr[@]}
+  #	dbg 'len names:' "${#__name_arr[@]}"
 	# IFS contains the token that strings are split to array with.
 	# IFS='^'
-	dbg 'len names:' "${__name_arr[*]}"
+  #	dbg 'len names:' "${__name_arr[*]}"
 	((${#__arg_arr[@]} < ${#__name_arr[@]})) && {
 		printf "Usage: %s %s\n" "$__func_name" \
 			"$(for arg in "${__name_arr[@]}"; do printf "%s" "<${arg}> "; done)"

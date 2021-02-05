@@ -21,6 +21,7 @@ eval "$(dircolors)"
 
 # Allow regex in glob.
 # Syntax +(regex). E.g.: ls /tmp/file.+([0-9])
+# Note: Also set in util.sh.
 shopt -s extglob
 # Check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.

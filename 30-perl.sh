@@ -1,4 +1,4 @@
-# Perl 5 (N2T / EZID)
+# Perl 5
 
 #PERL_ROOT="$HOME/perl5"
 #padd "$PERL_ROOT/bin"
@@ -34,15 +34,8 @@
 #printf \\nPERL_LOCAL_LIB_ROOT\\n; path "$PERL_LOCAL_LIB_ROOT"
 
 #PATH="/home/dahl/perl5/bin${PATH:+:${PATH}}"; export PATH;
-#PERL5LIB="/home/dahl/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-#PERL_LOCAL_LIB_ROOT="/home/dahl/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-#PERL_MB_OPT="--install_base \"/home/dahl/perl5\""; export PERL_MB_OPT;
-#PERL_MM_OPT="INSTALL_BASE=/home/dahl/perl5"; export PERL_MM_OPT;
-
-#PATH="/home/dahl/perl5/bin${PATH:+:${PATH}}"; export PATH;
 #PERL5LIB="/home/dahl/local/lib/perl5:/home/dahl/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 #PERL_LOCAL_LIB_ROOT="/home/dahl/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-##PERL_LOCAL_LIB_ROOT="/home/dahl/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 #PERL_MB_OPT="--install_base \"/home/dahl/perl5\""; export PERL_MB_OPT;
 #PERL_MM_OPT="INSTALL_BASE=/home/dahl/perl5"; export PERL_MM_OPT;
 

@@ -71,14 +71,6 @@ locates() { locate -0 "$1" | xargs -0 --no-run-if-empty ls -ld; }
 # Alias
 #
 
-# The MPV video player worked with CUDA hardware decoding out of the box,
-# smoothly playing 2160p HEVC (H.265) 36,909 kbps video on my GTX1060. Couldn't
-# get VLC and MPlayer to play the file smoothly even after a bunch of fiddling.
-#alias mpv='mpv --vo=opengl --hwdec=cuda'
-alias vlc='echo Use mvp \(command line\) or smplayer \(gui\)'
-alias mplayer='echo Use mvp \(command line\) or smplayer \(gui\)'
-alias sed="echo Use perl -i -pe 's/x/y/' file"
-
 # Capture stdin in X clipboard, removing final newline
 alias clip="perl -pe 'chomp if eof' | xclip -se c"
 

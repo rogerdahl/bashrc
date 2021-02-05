@@ -8,10 +8,6 @@
 # Silently skip configuration if not running interactively.
 [[ $- == *i* ]] || return
 
-here_sourced() {
-	echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-}
-
 # Skip with error if not sourced.
 [[ "$0" != "${BASH_SOURCE[0]}" ]] || {
 	echo >&2 "This script must be sourced: . $0"
@@ -23,18 +19,12 @@ echo 'bashrc.d...'
 
 # This dir should be used by bashrc.d scripts when building internal paths.
 BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-#echo "\$BASHRC_DIR=$BASHRC_DIR"
 
-dbg() {
-	[[ -n "${BASHRC_DEBUG}" ]] && echo "$@"
-}
+. "$BASHRC_DIR/util.sh"
+dbg "\$BASHRC_DIR=$BASHRC_DIR"
 
-for sh in "$BASHRC_DIR"/*.sh; do
+for sh in "$BASHRC_DIR"/+([0-9][0-9]-*.sh); do
 	dbg "$sh"
-	[[ ! "$(basename "$sh")" =~ ^[0-9][0-9]-.* ]] && {
-		[[ -n "$BASHRC_DEBUG" ]] && dbg 'ignored'
-		continue
-	}
 	# shellcheck disable=SC1090
 	source "$sh"
 done
@@ -47,7 +37,11 @@ shopt -q login_shell && {
 
 dbg_sep
 
-export BASHRC_DEBUG=""
+# ShellCheck complains about the variable being unused here, and says to export it.
+# But it's already exported, and variables only need to be exported once, not every
+# time they change.
+# shellcheck disable=SC2034
+#BASHRC_DEBUG=false
 
 # Suppress any non-zero error code here to prevent it from showing up as an error in
 # the first bash prompt that is rendered in the new shell.

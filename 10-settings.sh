@@ -1,7 +1,12 @@
 # Global settings
 
-# True: Any non-empty string
-export BASHRC_DEBUG=""
+# shellcheck disable=SC2034
+export false=0
+export true=1
+
+# Set to true or false
+export BASHRC_DEBUG=false
+# (( BASHRC_DEBUG )) && printf 'Debugging...\n'
 
 # Base settings for ls, du and other commands from the coreutils package.
 #

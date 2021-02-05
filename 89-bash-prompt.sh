@@ -9,15 +9,23 @@
 # not shown. To enable debug output for this function, `export BASHRC_DEBUG='y'` in the
 # interactive shell.
 
-AUTO_LS_AFTER_CD="y"
+AUTO_LS_AFTER_CD=true
 #export GIT_PS1_SHOWUPSTREAM='auto'
+
+# By default, we disable debugging while creating the prompt. Any string is "true"
+DISABLE_PROMPT_DEBUG=true
 
 export PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
 
 function __prompt_command() {
 	local exit_code=${PIPESTATUS[-1]} #"$?"
 
-	[[ -n "$AUTO_LS_AFTER_CD" ]] && {
+  (( DISABLE_PROMPT_DEBUG )) && {
+    tmp_debug=$BASHRC_DEBUG
+    BASHRC_DEBUG=false
+  }
+
+  (( AUTO_LS_AFTER_CD )) && {
 		test "$prev" != "$PWD" -a -n "$prev" && ll
 		prev="$PWD"
 	}
@@ -50,4 +58,8 @@ function __prompt_command() {
 	add_str PS1 "$(space_quote "$(color 'yellow' '\t')")" "$sep"
 	# user @ hostname
 	add_str PS1 "$(space_quote "$(color 'blue' '\u@\h')")" "$sep"
+
+  (( DISABLE_PROMPT_DEBUG )) && {
+    BASHRC_DEBUG=$tmp_debug
+  }
 }

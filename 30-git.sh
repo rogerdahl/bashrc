@@ -1,7 +1,5 @@
 # Git
 
-. "$BASHRC_DIR/util.sh"
-
 # Alias
 
 alias git_s="git status"
