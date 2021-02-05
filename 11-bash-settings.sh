@@ -54,3 +54,34 @@ HISTFILESIZE=2000
 
 # Include timestamps
 HISTTIMEFORMAT='%Y-%m-%d %H:%M:%s  '
+
+# Check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# The pattern "**" used in a pathname expansion context will match all files and zero or
+# more directories and subdirectories.
+# CD into a directory by typing just the name
+shopt -s autocd
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+shopt -s globstar
+
+# set bash option
+# https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+declare -A set_opt=([exit_on_error]='e' [print_trace]='x')
+set_opt() {
+  [[ $# -eq 2 ]] || {
+    printf "Usage: set_opt <name of option> <true/false>\n"
+    return 1
+  }
+  k="${set_opt[$1]}"
+  v="$2"
+  case "$v" in
+  true) x="-" ;;
+  false) x="+" ;;
+  esac
+
+  set "$k" "$x"
+}
