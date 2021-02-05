@@ -52,3 +52,8 @@ if is_installed 'source-highlight'; then
 	alias hl-format-list='source-highlight --outlang-list | less'
 	alias hl='source-highlight --src-lang python --out-format esc256 | less -R'
 fi
+
+# Make 'less' scroll lines just before a match into view (shows context)
+# and pass though ANSI color codes.
+add_str LESS 'j5' ' '
+add_str LESS '-R' ' '

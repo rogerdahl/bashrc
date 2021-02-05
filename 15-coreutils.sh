@@ -57,9 +57,9 @@ padd() {
 	delimiter="$2"
 	env_var="$3"
 
-#  dbg "path=%s\n" "$path"
-#  dbg "delimiter=%s\n" "$delimiter"
-#  dbg "env_var=%s\n" "$env_var"
+  # dbg "path=%s\n" "$path"
+  # dbg "delimiter=%s\n" "$delimiter"
+  # dbg "env_var=%s\n" "$env_var"
 
 	# realpath is in coreutils.
 	abs_path="$(realpath --canonicalize-existing --quiet "$path")"
