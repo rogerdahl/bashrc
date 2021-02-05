@@ -241,13 +241,3 @@ usage() {
 	}
 	return 0
 }
-
-# Draw a separator line
-sep() {
-  #  printf "%0.s$1" {1..(( ${COLUMNS} ))}
-  s = ''
-  for ({c = 0; c <= COLUMNS; c++}); do
-    s += '-'
-  done
-  printf "%s\n" s
-}
