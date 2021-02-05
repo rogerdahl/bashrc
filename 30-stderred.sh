@@ -13,7 +13,7 @@ red_disabled="$red_root/DISABLED"
 
 # Check if stderred works. Prints a line of text to stderr, which should show up in red.
 red_test() {
-  python <<EOF
+  python3 <<EOF
 import sys;
 print("This line is written to stderr and should be colored red", file=sys.stderr);
 EOF

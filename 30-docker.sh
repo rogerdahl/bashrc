@@ -2,9 +2,7 @@
 
 # Install Docker CE
 docker_install() {
-  sudo apt-get update
-
-  sudo apt-get install -y \
+  pkg_install \
     apt-transport-https \
     ca-certificates \
     curl \
@@ -20,8 +18,7 @@ docker_install() {
     echo "$UBUNTU_CODENAME"
   ) stable"
 
-  sudo apt-get update
-  sudo apt-get install -y docker-ce
+  pkg_install docker-ce
 
   sudo usermod -aG docker $USER
   newgrp docker
@@ -34,8 +31,45 @@ docker_install_completion() {
     -o /etc/bash_completion.d/docker-compose
 }
 
-# Spin up a Linux Mint container for dangerous experiments.
+# Spin up a Linux Mint container and log into it.
 docker_mint() {
-  docker pull linuxmintd/mint19-amd64
-  docker run -d linuxmintd/mint19-amd64
+  mint_image='linuxmintd/mint19-amd64:latest'
+  docker pull "$mint_image"
+  container_id="$(docker run --detach --tty "$mint_image")"
+
+  docker exec -it "$container_id" bash -c '
+    cd /root
+    echo > .bashrc ". \"$HOME/bin/bashrc.d/init.sh\""
+    echo >> .bashrc "cd"
+    mkdir bin
+  '
+
+  docker cp "$BASHRC_DIR" "$container_id:/root/bin/bashrc.d"
+  docker cp "$BASHRC_DIR/../update.sh" "$container_id:/root/bin"
+
+  docker exec --interactive --tty "$container_id" bash -c -i '
+    update.sh
+  '
+}
+
+# Snapshot save and restore
+docker_snap() {
+  docker checkpoint
+}
+
+docker_restore() {
+  checkpoint_name="$1"
+  destination_dir="$2"
+  docker start --checkpoint "$checkpoint_name" --checkpoint-dir "$destination_dir"
+}
+
+docker-stop-all() { docker stop $(docker ps -q); }
+
+docker-shell() { docker exec -it $(docker-last) bash $@; }
+
+docker-ls() { docker exec -it $(docker-last) ls -al /root; }
+
+docker-last() {
+  read -ra id_arr <<<$(docker ps -q)
+  printf "%s" "$id_arr"
 }

@@ -2,7 +2,6 @@
 
 # Troubleshooting udev rules, etc.
 
-
 #udevadm monitor
 
 # Trace udev execution of rules
@@ -18,4 +17,3 @@
 # Use udevadm monitor -u, udevadm test ... and udevadm trigger ... to verify which rules processed the events.
 
 # Very useful. A couple of comments udevadm test... appears to only show you environment variables, to gets ATTRS you can use udevadm info $DEVICE to find these other settings.
-

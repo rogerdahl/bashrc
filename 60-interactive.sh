@@ -1,8 +1,3 @@
-watch_tree() { watch -n .5 --difference --color exa --long --tree --bytes --sort=time --reverse --color=always "$1"; }
-
-# TODO: This pattern gives a nice progress bar while compressing. Make a / alias.
-# tar -c dot-minders | xz -vv --lzma2=dict=192MiB big_foo.tar
-
 # Misc
 alias pkill="pkill -ief"
 

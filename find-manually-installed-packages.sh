@@ -2,14 +2,13 @@
 
 # https://www.computerhope.com/unix/bash/read.htm
 
-while IFS= read -r -d $'\n' pkg
-do
+while IFS= read -r -d $'\n' pkg; do
   [[ -n "$(apt version "$pkg")" ]] && {
 
     printf "%s\n" "$(apt version "$pkg")"
   }
-#  printf "FILE: %s\n" "$f";
-#  printf "%s\n" "$(apt version "$pkg")"
+  #  printf "FILE: %s\n" "$f";
+  #  printf "%s\n" "$(apt version "$pkg")"
 done < <(perl -pe 's/\/.*//' <(apt list))
 
 #

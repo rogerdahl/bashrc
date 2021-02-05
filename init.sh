@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This script must be sourced: . init.sh
+# This script must be sourced: $ . init.sh
 
 # As the numbered scripts have not been sourced yet, we keep this script minimal and
 # self-contained.
@@ -20,12 +20,6 @@ here_sourced() {
 }
 
 echo 'bashrc.d...'
-
-# Implicitly export everything.
-#set -a
-
-# Print source lines as they are executed.
-#set -x
 
 # This dir should be used by bashrc.d scripts when building internal paths.
 BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -51,3 +45,10 @@ shopt -q login_shell && {
     <(last --hostlast --dns --time-format iso --present now --fullnames -3 | tac)
 }
 
+dbg_sep
+
+export BASHRC_DEBUG=""
+
+# Suppress any non-zero error code here to prevent it from showing up as an error in
+# the first bash prompt that is rendered in the new shell.
+true

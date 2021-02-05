@@ -9,8 +9,9 @@ import sys
 
 log = logging.getLogger(__name__)
 
-
 voc_str = '    ._$@01234A5BODEabcde'
+
+
 def main():
     rnd_str = [
         ''.join(random.choices(list(voc_str), k=5))

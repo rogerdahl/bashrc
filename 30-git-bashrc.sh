@@ -9,7 +9,9 @@ rc_cd() {
 
 # git add all numbered bashrc.d scripts and push
 # Using a subshell, so the interactive CWD does not change.
-# This somehow breaks implicit exports with "set -a" ?
+#
+# The regex in this function somehow breaks implicit exports with "set -a" ?
+
 rc_push() {
   rc_cd || return 1
   # The extglob (regex glob) must not be quoted.
@@ -30,4 +32,3 @@ rc_pull() (
 rc() {
   exec bash
 }
-

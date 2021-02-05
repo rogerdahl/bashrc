@@ -22,7 +22,7 @@ echo "Moving original ~/.bashrc -> $OLD_BASHRC"
 mv "$HOME/.bashrc" "$OLD_BASHRC"
 
 echo "Writing stub ~/.bashrc that sources bashrc.d/init.sh"
-echo > "$HOME/.bashrc" ". $BASHRC_DIR/init.sh"
+echo >"$HOME/.bashrc" ". $BASHRC_DIR/init.sh"
 
 read -p 'Hit enter to launch a new shell and run initial automatic setup'
 exec bash

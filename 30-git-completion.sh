@@ -39,9 +39,3 @@ is_ready || {
 . "$git_completion"
 # shellcheck disable=SC1090
 . "$git_prompt"
-
-# shellcheck disable=SC2016
-add_str "\[\033[01;35m\]$(__git_ps1 "%s")\033[00m\]" ' ' 'PS1'
-#PS1="\[\033[01;35m\]$(__git_ps1 "%s")\033[00m\] $PS1"
-#export PS1
-

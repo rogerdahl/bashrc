@@ -1,5 +1,5 @@
 # Replace some common classic commands with more modern alternatives.
-# These do better color highlighting and most (all?) have integrated GIT support.
+# These do better highlighting and most (all?) have integrated GIT support.
 
 # ripgrep with paging
 is_installed rg && {
@@ -8,7 +8,7 @@ is_installed rg && {
   # Print only the maths of files with one or more matches
   alias rg-path='rg --files-with-matches'
 } || {
-  echo 'ripgrep not installed'
+  dbg 'ripgrep not installed'
 }
 
 # Bat, the amazing cat with wings.
@@ -31,13 +31,20 @@ case $(
   # and a bug where it crashes on dangling symlink.
   # shellcheck disable=SC2191
   exa_args=(
-  --bytes --extended --git --group --group-directories-first --long
-  --time-style=long-iso
+    --bytes
+    --extended
+    --git
+    --group
+    --group-directories-first
+    --long
+    --time-style=long-iso
+    --color=always
   )
   alias ll="exa --sort name ${exa_args[*]}"
   alias lw="exa --sort new ${exa_args[*]}"
   alias lo="exa --sort old ${exa_args[*]}"
   alias lt="exa --tree ${exa_args[*]}"
+  watch_tree() { watch -n .5 --difference --color lt --sort=time --reverse "$1"; }
   ;;
 *)
   alias ll='ls -l --group-directories-first --color=auto'
@@ -47,12 +54,3 @@ esac
 is_installed 'nvim' && {
   alias vim='nvim'
 }
-
-# Automatic ls after cd
-# Must run after the ll alias is defined.
-ls_after_cd() {
-  test "$prev" != "$PWD" -a -n "$prev" && ll
-  prev="$PWD"
-}
-PROMPT_COMMAND=ls_after_cd
-

@@ -8,4 +8,3 @@
 
 export LOCPATH="$(realpath "locale")"
 export LANG="en_US.utf8"
-

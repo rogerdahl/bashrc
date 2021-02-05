@@ -2,8 +2,9 @@
 
 # Aliases are only available in interactive commands and sourced scripts.
 
-# Python 2 to 3, write converted file back to original
-alias 2to3='2to3 -w'
+# Reminder to use specific 2to3.
+alias 2to3='Use a version of 2to3 that is specific to the target version of Python'
+
 alias black='black --skip-string-normalization'
 
 # Run tests with debugging and sample updating

@@ -3,6 +3,8 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/locale" />
+      <excludeFolder url="file://$MODULE_DIR$/git" />
+      <excludeFolder url="file://$MODULE_DIR$/stderred" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.8 (dex)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

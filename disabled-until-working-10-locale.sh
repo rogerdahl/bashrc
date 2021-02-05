@@ -13,7 +13,6 @@
 # LANG
 #     default value for all LC_* variables. (See `man 7 locale' for a detailed description.)
 
-
 # Set user LOCPATH, which overrides the system locale location.
 #LOCPATH="$BASHRC_DIR/locale"
 #export LOCPATH
