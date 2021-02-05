@@ -41,7 +41,7 @@ sep() {
 
 # Debugging for bashrc.d itself.
 dbg() {
-  [[ -n "$BASHRC_DEBUG" ]] && debug "${*}"
+  (( BASHRC_DEBUG )) && debug "${*}"
 }
 dbg_sep() {
   debug "$(sep 8)"
