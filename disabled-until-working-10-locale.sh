@@ -23,8 +23,8 @@
 #}
 
 unset_all_lc() {
-  for x in $(env | grep '^(LC|LANG|LANGUAGE|LOCPATH)$'); do
-    echo "$x"
-    unset "$(echo "$x" | perl -pe 's/=.*//')"
-  done
+	for x in $(env | grep '^(LC|LANG|LANGUAGE|LOCPATH)$'); do
+		echo "$x"
+		unset "$(echo "$x" | perl -pe 's/=.*//')"
+	done
 }

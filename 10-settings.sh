@@ -1,7 +1,7 @@
 # Global settings
 
 # True: Any non-empty string
-export BASHRC_DEBUG="y"
+export BASHRC_DEBUG=""
 
 # Base settings for ls, du and other commands from the coreutils package.
 #

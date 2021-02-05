@@ -29,7 +29,7 @@ CUSTOM_EN_US_PATH = pathlib.Path(LOCALE_PATH / (SYS_EN_US_PATH.name + '.custom')
 
 
 def main():
-    create_custom - common()
+    # create_custom _ common()
     subprocess.run(
         [
             'localedef',
@@ -48,29 +48,27 @@ def main():
     )
 
 
-def create_custom-common():
+def create_custom_common():
+    shutil.copy(SYS_EN_US_PATH, CUSTOM_EN_US_PATH)
 
-
-shutil.copy(SYS_EN_US_PATH, CUSTOM_EN_US_PATH)
-
-with CUSTOM_COMMON_PATH.open('w') as mod:
-    is_modified = False
-    for s in SYS_COMMON_PATH.open():
+    with CUSTOM_COMMON_PATH.open('w') as mod:
         is_modified = False
-        el_list, pri_list = split_line(s)
-        if pri_list:
-            # if not pri_list:
-            #     mod.write(s)
-            #     continue
-            is_modified |= separate_upper_lower_case(el_list, pri_list)
-            # is_modified |= significant_full_stop(el_list, pri_list)
-            # is_modified |= significant_underscore(el_list, pri_list)
-        if is_modified:
-            print(f'old: {s}', end='')
-            s = merge_line(el_list, pri_list) + '\n'
-            print(f'new: {s}', end='')
-            # print()
-        mod.write(s)
+        for s in SYS_COMMON_PATH.open():
+            is_modified = False
+            el_list, pri_list = split_line(s)
+            if pri_list:
+                # if not pri_list:
+                #     mod.write(s)
+                #     continue
+                is_modified |= separate_upper_lower_case(el_list, pri_list)
+                # is_modified |= significant_full_stop(el_list, pri_list)
+                # is_modified |= significant_underscore(el_list, pri_list)
+            if is_modified:
+                print(f'old: {s}', end='')
+                s = merge_line(el_list, pri_list) + '\n'
+                print(f'new: {s}', end='')
+                # print()
+            mod.write(s)
 
 """
 % First-level

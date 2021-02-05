@@ -61,7 +61,7 @@ alias nobuffer='stdbuf -i0 -o0 -e0'
 alias make='make -j16'
 # Make pipe look like terminal
 faketty() {
-  script -qfc "$(printf "%q " "$@")" /dev/null
+	script -qfc "$(printf "%q " "$@")" /dev/null
 }
 
 # Locate with ls -l on each result

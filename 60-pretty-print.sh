@@ -11,9 +11,6 @@
 # that those are often significant to the human viewer, who knows what the information
 # stored in the strings is.
 
-# --sample-tidy --full-trace
-# keep running. can't be combined with --sample-ask as pytest suppresses prompts. can be combined with --sample-write
-
 # Log file
 pl() { black - <"$1" | bat --language python; }
 alias batlog='bat --paging=never --language python'
@@ -24,20 +21,20 @@ px() { xmlstarlet format "$1" | bat --language xml; }
 
 # Python (Black + bat)
 pp() {
-  black - <"$1" 2>/dev/null | bat --language python --style plain,changes,grid,numbers,snip
+	black - <"$1" 2>/dev/null | bat --language python --style plain,changes,grid,numbers,snip
 }
 
 # Recursive egrep in current dir with context and color
-g() { grep -i -r --color=always -C 10 "$1" . }
+g() { grep -i -r --color=always -C 10 "$1" .; }
 
 # CSV (column + bat)
 pcsv() {
-  require 'util-linux' # column
-  require 'bat'
+	require 'util-linux' # column
+	require 'bat'
 
-  column -t -s, -n "$1" |
-    bat --wrap never --language python --pager \
-      "less --no-init --quit-if-one-screen --chop-long-lines --quit-on-intr --RAW-CONTROL-CHARS"
+	column -t -s, -n "$1" |
+		bat --wrap never --language python --pager \
+			"less --no-init --quit-if-one-screen --chop-long-lines --quit-on-intr --RAW-CONTROL-CHARS"
 }
 
 # GNU Source-highlight
@@ -45,13 +42,13 @@ pcsv() {
 # much more syntax. Source-highlight is good as a fallback.
 require source-highlight
 if is_installed 'source-highlight'; then
-  LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
-  add_str LESS '-R' ' '
-  export LESSOPEN LESS
+	LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+	add_str LESS '-R' ' '
+	export LESSOPEN LESS
 
-  # When getting a list of the output options, it's called a language, but when selecting
-  # it, it's called a format.
-  alias hl-lang-list='source-highlight --lang-list | less'
-  alias hl-format-list='source-highlight --outlang-list | less'
-  alias hl='source-highlight --src-lang python --out-format esc256 | less -R'
+	# When getting a list of the output options, it's called a language, but when selecting
+	# it, it's called a format.
+	alias hl-lang-list='source-highlight --lang-list | less'
+	alias hl-format-list='source-highlight --outlang-list | less'
+	alias hl='source-highlight --src-lang python --out-format esc256 | less -R'
 fi

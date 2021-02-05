@@ -8,6 +8,6 @@
 BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 for sh in "$BASHRC_DIR"/+(1[0-9]-*.sh); do
-  #  echo "$sh"
-  . "$sh"
+	#  echo "$sh"
+	. "$sh"
 done
