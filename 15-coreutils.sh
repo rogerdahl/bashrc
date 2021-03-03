@@ -69,3 +69,33 @@ padd() {
 		dbg "Ignored non-existing path: $path"
 	fi
 }
+
+
+# https://unix.stackexchange.com/a/401978/21709
+prepath() {
+    local usage="\
+Usage: prepath [-f] [-n] [-q] DIR
+  -f Force dir to front of path even if already in path
+  -n Nonexistent dirs do not return error status
+  -q Quiet mode"
+
+    local tofront=false errcode=1 qecho=echo
+    while true; do case "$1" in
+        -f)     tofront=true;       shift;;
+        -n)     errcode=0;          shift;;
+        -q)     qecho=':';          shift;;
+        *)      break;;
+    esac; done
+    # Bad params always produce message and error code
+    [[ -z $1 ]] && { echo 1>&2 "$usage"; return 1; }
+
+    [[ -d $1 ]] || { $qecho 1>&2 "$1 is not a directory."; return $errcode; }
+    dir="$(command cd "$1"; pwd -P)"
+    if [[ :$PATH: =~ :$dir: ]]; then
+        $tofront || { $qecho 1>&2 "$dir already in path."; return 0; }
+        PATH="${PATH#$dir:}"        # remove if at start
+        PATH="${PATH%:$dir}"        # remove if at end
+        PATH="${PATH//:$dir:/:}"    # remove if in middle
+    fi
+    PATH="$dir:$PATH"
+}

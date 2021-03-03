@@ -23,6 +23,29 @@
 #requires 'zlib1g'            'Python & pyenv'
 #requires 'zlib1g-de'         'Python & pyenv'
 
+pyenv_install_deps() {
+pkg_install \
+  'build-essential' \
+  'curl' \
+  'python3-dev' \
+  'python-openssl' \
+  'python-setuptools' \
+  'libbz2-dev' \
+  'libc6-dev' \
+  'libdb-dev' \
+  'libffi-dev' \
+  'libgdbm-dev' \
+  'liblzma-dev' \
+  'libncurses5-dev' \
+  'libncursesw5-dev' \
+  'libreadline-dev' \
+  'libsqlite3-dev' \
+  'libssl-dev' \
+  'libz-dev' \
+  'tk-dev' \
+  'zlib1g-dev'
+}
+
 # Ensure that pyenv is installed, active and that there's
 # a global venv with latest version of CPython.
 pyenv_setup() {
@@ -93,13 +116,13 @@ pyenv_update() {
 	pyenv update -v >/dev/null 2>&1
 }
 
-pyenv-is_installed-ver() {
+pyenv_is_installed_ver() {
 	py_ver="$1"
 	pyenv versions | env grep --quiet --perl-regex "^\s*$py_ver\s*$"
 	return $?
 }
 
-pyenv-is_installed-venv() {
+pyenv_is_installed_venv() {
 	venv="$1"
 	pyenv virtualenvs --bare | env grep --quiet --perl-regex "^\s*$venv\s*$"
 }
@@ -114,7 +137,7 @@ pyenv_init() {
 }
 
 
-pyenv_init
+# pyenv_init
 
 # pip
 
@@ -136,11 +159,11 @@ pip_up() {
 	}
 }
 
-pip_up-now() {
+pip_up_now() {
 	pip install --upgrade pip
 }
 
-pip_upgrade-all() {
+pip_upgrade_all() {
 	pip list --outdated --format=freeze |
 		grep -v "^\-e" |
 		cut -d = -f 1 |

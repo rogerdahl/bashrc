@@ -17,6 +17,10 @@ DISABLE_PROMPT_DEBUG=true
 
 export PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
 
+prompt_simple() {
+  export PROMPT_COMMAND='{ PS1="$ "; }';
+}
+
 function __prompt_command() {
 	local exit_code=${PIPESTATUS[-1]} #"$?"
 

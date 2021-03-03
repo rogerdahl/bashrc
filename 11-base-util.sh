@@ -10,8 +10,27 @@ color() {
     printf "Usage: color black/red/green/yellow/blue/magenta/cyan/white <text to print in color>\n"
     return 1
   }
+  # Bash syntax:
+  # \033 is the escape character in octal, 27 decimal, 0x1b hex.
   printf "\033[01;%sm%s\033[00m\n" "${colors[${1}]}" "${2}"
 }
+
+
+################
+err_hiliter() {
+  bash | perl -pe 's/\w/\033[01;31m\1\033[00m/gi; last unless defined $_;'
+
+#  rx_list='exception|err(or|\W)'
+#  line = $_
+#  while true; do
+#    for r in rx_list; do
+#        [[ ]]
+#    done
+#  done
+}
+
+
+
 
 # Logging with colors
 # - Bash syntax: The variable name for the array of arguments passed to a function is "".

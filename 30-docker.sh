@@ -42,6 +42,11 @@ docker_mint() {
     echo > .bashrc ". \"$HOME/bin/bashrc.d/init.sh\""
     echo >> .bashrc "cd"
     mkdir bin
+
+    sudo apt-get update --yes
+    sudo apt-get dist-upgrade --yes
+    sudo apt-get autoclean --yes
+    sudo apt-get autoremove --purge --yes
   '
 
 	docker cp "$BASHRC_DIR" "$container_id:/root/bin/bashrc.d"
@@ -73,3 +78,4 @@ docker-last() {
 	read -ra id_arr <<<$(docker ps -q)
 	printf "%s" "$id_arr"
 }
+
