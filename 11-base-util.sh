@@ -15,22 +15,18 @@ color() {
   printf "\033[01;%sm%s\033[00m\n" "${colors[${1}]}" "${2}"
 }
 
-
 ################
 err_hiliter() {
   bash | perl -pe 's/\w/\033[01;31m\1\033[00m/gi; last unless defined $_;'
 
-#  rx_list='exception|err(or|\W)'
-#  line = $_
-#  while true; do
-#    for r in rx_list; do
-#        [[ ]]
-#    done
-#  done
+  #  rx_list='exception|err(or|\W)'
+  #  line = $_
+  #  while true; do
+  #    for r in rx_list; do
+  #        [[ ]]
+  #    done
+  #  done
 }
-
-
-
 
 # Logging with colors
 # - Bash syntax: The variable name for the array of arguments passed to a function is "".
@@ -39,39 +35,100 @@ err_hiliter() {
 
 __p() {
   # Print right adjusted. The ANSI color codes must be included in the count.
-  printf "%20s " "$(color "${1}" "${2}")"
-  # We pass the format string to printf in a variable.
-  # shellcheck disable=SC2059
-  printf "%s" "${@:3}" $'\n'
+  printf "%20s " "$(color "$1" "$2")"
+  shift 2
+  while (( "$#" )); do
+    str="$1"
+    shift
+    # Replace the special string "sep" with a repeating string that fills the rest of the line.
+    if [[ "$str" == "sep" ]]; then
+        # If 'sep' is not the last arg, use the next arg as the string to repeat.
+      if (( "$#" )); then
+        sep_str="$1"
+        shift
+      else
+        sep_str="~"
+      fi
+      str="$(sep "$sep_str")"
+    fi
+    printf '%s' "$str"
+    (( "$#" )) && printf ' '
+  done
+  printf '\n'
 }
-debug() { __p 'magenta' 'DEBUG' "${*}"; }
-info() { __p 'green' 'INFO' "${*}"; }
-warn() { __p 'yellow' 'WARNING' "${*}"; }
-error() { __p 'red' 'ERROR' "${*}"; }
-ln() { printf "\n"; }
 
-# Draw a line to separate two sections of text
+#__p() {
+#  # TODO: Use 'shift' to simplify this.
+#  # Print right adjusted. The ANSI color codes must be included in the count.
+#  printf "%20s " "$(color "${1}" "${2}")"
+#  # We pass the format string to printf in a variable.
+#  # shellcheck disable=SC2059
+#  local i=1;
+#  local arg_count=$((${#} - 2))
+#  for str in "${@:3}"; do
+#    # Replace the special string "sep" with a repeating string that fills the rest of the line.
+#    if [[ "$str" == "sep" ]]; then
+#      # If 'sep' is not the last arg, use the next arg as the string to repeat.
+#      if [[ $i < "$arg_count" ]]; then
+#        sep_str="${*:$((i + 3)):1}"
+#      else
+#        sep_str="~"
+#      fi
+#      str="$(sep "$sep_str")"
+#    fi
+#    printf '%s' "$str"
+#    (( i < arg_count)) && printf ' '
+#    i=$((i + 1))
+#  done
+#  printf $'\n'
+#}
+#
+# Print a line with severity level. The severity level is colorized when writing to a
+# tty. Multiple arguments are printed on the same line separarated by a single space.
+# The special string "sep" causes the remaining part of the line to be filled with a
+# repeated character. The character is "~" by default. Another character can be selected
+# by adding it after "sep". E.g. `pdebug "my message" sep =`  ,
+#    DEBUG my message ===========================================
+pdebug() { __p 'magenta' 'DEBUG' "${@}"; }
+# Not named 'info' as that name is used by the GNU Info doc reader, often used for man pages.
+pinfo() { __p 'green' 'INFO' "${@}"; }
+pwarn() { __p 'yellow' 'WARNING' "${@}"; }
+perror() { __p 'red' 'ERROR' "${@}"; }
+pln() { printf "\n"; }
+
+# Create a line of repeated strings that, when printed, will span from the current
+# position of the caret to the end of the line. If space is wanted between the last
+# last printed character and the start of the line, print the space before calling this
+# method.
 sep() {
-  local cur_col="$1" || "0"
-  local i=$((COLUMNS - cur_col))
-  while ((i--)); do printf '~'; done
-  echo
+  arg=("$@")
+  req=()
+  opt=('character or string to repeat')
+  usage arg req opt && return 1
+  local cur_col="$(get_caret_col)"
+  local sep_str="${arg-~}"
+  local sep_len="${#sep_str}"
+  local fill_len=$((COLUMNS - cur_col))
+  local full_count=$((fill_len / sep_len))
+  local rem_count=$((fill_len - (full_count * sep_len)))
+  for (( i = 0; i < full_count; i++ )); do
+    printf '%s' "$sep_str"
+  done
+  printf '%s' "${sep_str::$rem_count}"
 }
 
 # Debugging for bashrc.d itself.
 dbg() {
-  (( BASHRC_DEBUG )) && debug "${*}"
-}
-dbg_sep() {
-  debug "$(sep 8)"
+  (( BASHRC_DEBUG )) && pdebug "${@}"
 }
 
 # Return true if the script is sourced (invoked with "source <script>" or ". <script>".
 is_sourced() {
-  [[ "$0" != "${BASH_SOURCE[0]}" ]] && return 0 || return 1
+  [[ "$0" == "${BASH_SOURCE[0]}" ]] || return 1;
+  return 0;
 }
 
-is_installed() {
+cmd_is_installed() {
   command -v "$1" >/dev/null 2>&1
   return $?
 }
@@ -84,6 +141,16 @@ is_file() {
 is_dir() {
   test -d "$1"
   return $?
+}
+
+exists() {
+  (is_file "$1" || is_dir "$1") && return 0
+  return 1
+}
+
+is_in_list() {
+  [[ "${!env_var}" =~ (^|"$sep")"$str"($|"$sep") ]] && return 0
+  return 1
 }
 
 # Print argument split to lines. Default to $PATH if no argument is provided.
@@ -100,9 +167,10 @@ dedup() {
 }
 
 # Return the current date-time in a format similar to ISO 8601.
-# - Date and time are separated by a space instead of "T".
-# - Hour, minute and second are separated by ";" instead of ":" (for use in filename)
-# `
+# - Date and time are separated by an underscore (_) instead of "T".
+# - Hour, minute and second are separated by ";" instead of ":".
+# - Note: ":" is valid for filenames under Linux, but it's invalid under Windows, and is
+# used as a path separator on Unix, so it's best to avoid it.
 now() {
   printf "%s" "$(date "+%Y-%m-%d_%H;%M;%S")"
 }
@@ -131,7 +199,7 @@ here() {
 # Get the absolute path to the directory of the caller.
 # - Use from sourced script or interactive shell, NOT from executed  script or
 #   interactive shell.
-# TODO: Check again. Doesn't work.
+# TODO: Check again. Doesn't work?
 here_sourced() {
   echo -n "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 }
@@ -176,42 +244,50 @@ clear_flag() {
 # - To use for argument lists, pass a single space, " ", as the delimiter. The env var
 # is created if it doesn't already exist.
 add_str() {
-  [[ "$#" -ne 4 ]] || {
-    # shellcheck disable=SC2016
-    echo "Usage: $0 <string to add> <delimiter> <env var name (no \$)>"
-    return 1
-  }
+#  __args=('env var name (without dollar sign)' 'string to add' 'separator')
+#  usage __in __args || return 1
 
-  [[ -n "$env_var" ]] || return
+  #  echo 1
+  #	[[ "$#" -ne 4 ]] && {
+  #	  echo 3
+  #		# shellcheck disable=SC2016
+  #		echo "Usage: $0 <env var name (without dollar sign)> <string to add> <delimiter>"
+  #		return 1
+  #	}
+  #  echo 2
+
+  #	[[ -n "$env_var" ]] || return
 
   local env_var="$1"
   local str="$2"
-  local del="$3"
+  local sep="$3"
 
-  # dbg "env_var='%s'='%s', str='%s', del='%s'\n" "$env_var" "${!env_var}" "$str" "$del"
+  # dbg "env_var='%s'='%s', str='%s', sep='%s'\n" "$env_var" "${!env_var}" "$str" "$sep"
 
-  if [[ -n "$env_var" ]]; then
-    if [[ "${!env_var}" =~ (^|"$del")"$str"($|"$del") ]]; then
-      dbg "Skipped adding to \$$env_var: Already in list: $str"
-    else
-      dbg "Adding \"$str\" to front of \$$env_var"
-      # Bash syntax:
-      # - `${param:+word}` equivalent in Python is `"word" if param else ""`. In
-      # `${PATH:+:${PATH}}`, the first `:` is fixed syntax and the second is the list
-      # del for PATH. So the first `PATH` is the param and `:${PATH}` is the section
-      # that will get expanded or set to "". Result is that, when starting with an empty
-      # path, the list will not have a trailing ":". The syntax does not deal with any other
-      # cases, like PATH already having leading or trailing ":".
-      # - `${!var}` is indirect variable read.
-      # - `printf -v var` is indirect variable write.
-      printf -v "$env_var" "%s" "${str}${!env_var:+${del}${!env_var}}"
-      dbg "Added to \$$env_var: \"$str\""
-      dbg "-> ${!env_var}"
-      export "${env_var?}"
-    fi
-  else
+  if [[ ! -n "$env_var" ]]; then
     dbg "Skipped adding to \$$env_var: Empty string"
+    return 0
   fi
+
+  if is_in_list "$sep"; then
+    dbg "Skipped adding \"$str\" to \$$env_var: Already in list: ${!env_var}"
+    return 0
+  fi
+
+  # dbg "Adding \"$str\" to front of \$$env_var"
+  # Bash syntax:
+  # - `${param:+word}` equivalent in Python is `"word" if param else ""`. In
+  # `${PATH:+:${PATH}}`, the first `:` is fixed syntax and the second is the list
+  # separator for PATH. So the first `PATH` is the param and `:${PATH}` is the
+  # section that will get expanded or set to "". Result is that, when starting with
+  # an empty path, the list will not have a trailing ":". The syntax does not deal
+  # with any other cases, like PATH already having leading or trailing ":".
+  # - `${!var}` is indirect variable read.
+  # - `printf -v var` is indirect variable write.
+  printf -v "$env_var" "%s" "${str}${!env_var:+${sep}${!env_var}}"
+  dbg "Added to \$$env_var: \"$str\""
+  dbg "-> ${!env_var}"
+  export "${env_var?}"
 }
 
 # Add double quotes to string if it contains spaces, else return it unchanged.
@@ -222,30 +298,43 @@ space_quote() {
   esac
 }
 
-# Print a "Usage' string and return 1 if number of arguments is outside of range.
-# Usage of usage() (can it be made to look nicer?):
-#     __in=( "$@" );
-#     __args=('name of arg 1' 'name of arg 2' ...);
-#  usage __in __args
 usage() {
-  # Bash syntax:
-  # 'local -n' declares 'namevars' (new in Bash 4.3). They're call-by-reference.
-  # Bizarrely, they cause name collisions between functions even though they're declared
-  # with 'local'.
-  local -n __arg_arr=$1
-  local -n __name_arr=$2
-  local __func_name="${FUNCNAME[1]}"
-  dbg 'args:' "${__arg_arr[@]}"
-  dbg 'names:' "${__name_arr[@]}"
-  dbg 'len args:' ${#__arg_arr[@]}
-  dbg 'len names:' "${#__name_arr[@]}"
-  # IFS contains the token that strings are split to array with.
-  # IFS='^'
-  dbg 'len names:' "${__name_arr[*]}"
-  ((${#__arg_arr[@]} < ${#__name_arr[@]})) && {
-    printf "Usage: %s %s\n" "$__func_name" \
-      "$(for arg in "${__name_arr[@]}"; do printf "%s" "<${arg}> "; done)"
-    return 1
-  }
+  # Passing multiple arrays to a function with the default pass-by-value causes them to
+  # be combined to a single array. This declares the values as pass-by-reference, which
+  # allows the arrays to be kept separate. The caller must not add "$" to the varaible
+  # names (which currently caues IDEA based IDEs to complain about unused variables).
+  declare -n arg_arr=$1
+  declare -n req_arr=$2
+  declare -n opt_arr=$3
+
+  arg_count="${#arg_arr[@]}"
+  req_count="${#req_arr[@]}"
+  opt_count="${#opt_arr[@]}"
+
+#  printf 'arg_count: %s\n' "$arg_count"
+#  printf 'req_count: %s\n' "$req_count"
+#  printf 'opt_count: %s\n' "$opt_count"
+
+  (( arg_count >= req_count && arg_count <= (req_count + opt_count) )) && return 1;
+
+  local arg_str="$([[ "$arg_arr" ]] && printf '"%s" ' "${arg_arr[@]}")"
+  local req_str="$([[ "$req_arr" ]] && printf '[%s] ' "${req_arr[@]}")"
+  local opt_str="$([[ "$opt_arr" ]] && printf '[%s (optional)] ' "${opt_arr[@]}")"
+
+#  printf 'arg_str: %s\n' "$arg_str"
+#  printf 'req_str: %s\n' "$req_str"
+#  printf 'opt_str: %s\n' "$opt_str"
+
+  printf 'Usage: %s %s %s\n' "${FUNCNAME[1]}" "$req_str" "$opt_str"
+  printf 'Received: %s\n' "$arg_str"
+
   return 0
+}
+
+# Replace regular "alias" with one that includes logging.
+alias() {
+  arg=("$@"); req=('name=value'); opt=(); usage arg req opt && return 1
+  # cmd_is_installed "$1" || return 0
+  pinfo 'alias' "$@"
+  command alias "$@"
 }

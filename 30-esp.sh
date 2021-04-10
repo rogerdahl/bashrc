@@ -5,45 +5,45 @@
 _esp_idf_path="$HOME/sdk/esp-idf"
 
 is_dir "$_esp_idf_path" && {
-	# Must be run from the same Python environment that it was installed in.
-	# It's probably best to keep a separate venv only for ESP-IDF and set set it in the
-	# root of ESP-IDF projects.
-	ESP_IDF_PATH="$_esp_idf_path"
-	IDF_PYTHON_ENV_PATH="$_esp_idf_path"
-	# Activate ESP-IDF environment with "get-idf"
-	alias get-idf='. $ESP_IDF_PATH/export.sh'
-	PY_ESP_IDF_VENV="esp-idf"
+  # Must be run from the same Python environment that it was installed in.
+  # It's probably best to keep a separate venv only for ESP-IDF and set set it in the
+  # root of ESP-IDF projects.
+  ESP_IDF_PATH="$_esp_idf_path"
+  IDF_PYTHON_ENV_PATH="$_esp_idf_path"
+  # Activate ESP-IDF environment with "get-idf"
+  alias get-idf='. $ESP_IDF_PATH/export.sh'
+  PY_ESP_IDF_VENV="esp-idf"
 
-	export IDF_PYTHON_ENV_PATH
-	export ESP_IDF_PATH
-	export PY_ESP_IDF_VENV
+  export IDF_PYTHON_ENV_PATH
+  export ESP_IDF_PATH
+  export PY_ESP_IDF_VENV
 }
 
 esp_idf_install() {
-	[[ -f "./sdkconfig" ]] || {
-		echo 'Run this command in the root of an ESP-IDF project'
-		echo '(Checked for and did not find "./sdkconfig")'
-		return 1
-	}
-	pyenv_setup
-	pyenv-is_installed-venv "$PY_ESP_IDF_VENV" || {
-		PY_LATEST_VER="$(pyenv_find_latest_py_ver)"
-		pyenv_install_venv "$PY_LATEST_VER" "$PY_PY_ESP_IDF_VENV"
-	}
-	pyenv local "$PY_PY_ESP_IDF_VENV"
-	"$ESP_IDF_PATH/install.sh"
-	pip-wheel
-	. "$ESP_IDF_PATH/export.sh"
+  [[ -f "./sdkconfig" ]] || {
+    echo 'Run this command in the root of an ESP-IDF project'
+    echo '(Checked for and did not find "./sdkconfig")'
+    return 1
+  }
+  pyenv_setup
+  pyenv-cmd_is_installed-venv "$PY_ESP_IDF_VENV" || {
+    PY_LATEST_VER="$(pyenv_find_latest_py_ver)"
+    pyenv_install_venv "$PY_LATEST_VER" "$PY_PY_ESP_IDF_VENV"
+  }
+  pyenv local "$PY_PY_ESP_IDF_VENV"
+  "$ESP_IDF_PATH/install.sh"
+  pip-wheel
+  . "$ESP_IDF_PATH/export.sh"
 }
 
 esp_idf_install-pip-deps() {
-	pip_install_core-packages
-	pip install \
-		"gdbgui==0.13.2.0" \
-		"pygdbmi<=0.9.0.2" \
-		"reedsolo>=1.5.3,<=1.5.4" \
-		"bitstring>=3.1.6" \
-		"ecdsa>=0.16.0"
+  pip_install_core-packages
+  pip install \
+    "gdbgui==0.13.2.0" \
+    "pygdbmi<=0.9.0.2" \
+    "reedsolo>=1.5.3,<=1.5.4" \
+    "bitstring>=3.1.6" \
+    "ecdsa>=0.16.0"
 }
 
 # Dark mode for menuconfig

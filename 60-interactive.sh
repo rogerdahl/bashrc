@@ -1,4 +1,9 @@
 # Misc
+
+# Indent .sh files
+# -w Write result back to file
+# -i 2 Indent with 2 spaces (indents with tab by default)
+alias shfmt="shfmt -w -i 2"
 alias pkill="pkill -ief"
 
 alias iotop="sudo iotop -o -d 2 -P"
@@ -32,6 +37,11 @@ alias trash-empty='gio trash --empty'
 
 alias m4b_tool='docker run -it --rm -u $(id -u):$(id -g) -v "$(pwd)":/mnt m4b-tool'
 
+# Invoke a command with '--help' and page the result
+h() {
+  "$1" --help | bat --language=sh
+}
+
 # MP3, ID3
 
 # mp3val
@@ -57,11 +67,10 @@ alias man='man -i'
 alias v='gpicview'
 # Case insensitive less
 alias less='less -i'
-alias nobuffer='stdbuf -i0 -o0 -e0'
 alias make='make -j16'
 # Make pipe look like terminal
 faketty() {
-	script -qfc "$(printf "%q " "$@")" /dev/null
+  script -qfc "$(printf "%q " "$@")" /dev/null
 }
 
 # Locate with ls -l on each result
