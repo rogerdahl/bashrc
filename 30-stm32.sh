@@ -2,4 +2,4 @@
 
 padd "$HOME/bin/gcc-arm-none-eabi-7-2018-q2-update/bin"
 padd "$HOME/bin/stlink"
-padd "$HOME/bin/stlink" ':' LD_LIBRARY_PATH
+padd "$HOME/bin/stlink" 'LD_LIBRARY_PATH'

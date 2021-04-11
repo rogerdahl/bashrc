@@ -33,41 +33,29 @@ padd() {
   # it as "${@:0:}", all elements are included.
   # echo "${@}" # -> 1 2 3 4 5
   # echo "${@:0}" -> /bin/bash 1 2 3 4 5
-
-  # Contains a newline?
-  # "${FUNCNAME[1]}"
-
-  # Due to the default args, this command is not a got fit for the general usage()
-  # function.
-  [[ -n "$1" ]] || {
-    printf '%s\n' 'Usage: padd <path> <optional delimiter> <optional var name>'
-    printf '%s\n' 'If given only a path, adds it to PATH, using delimiter ":"'
-    return 1
-  }
-  # Add default delimiter, ":"
-  [[ -n "$2" ]] || {
-    set -- "${@:1:1}" ":" "${@:3}"
-  }
-  # Add default env var, "PATH"
-  [[ -n "$3" ]] || {
-    set -- "${@:1:2}" "PATH" "${@:4}"
-  }
+  arg=("$@") req=('string to add') opt=('env var name (without dollar sign)' 'separator')
+  usage arg req opt && return 1
 
   path="$1"
-  delimiter="$2"
-  env_var="$3"
+  env_var="$2"
+  sep_str="$3"
 
   # dbg "path=%s\n" "$path"
-  # dbg "delimiter=%s\n" "$delimiter"
+  # dbg "sep_str=%s\n" "$sep_str"
   # dbg "env_var=%s\n" "$env_var"
+
+  [[ -z "$env_var" ]] && env_var='PATH'
+  [[ -z "$sep_str" ]] && sep_str=':'
 
   # realpath is in coreutils.
   abs_path="$(realpath --canonicalize-existing --quiet "$path")"
-  if [ $? -eq 0 ]; then
-    add_str "$env_var" "$abs_path" "$delimiter"
-  else
-    dbg "Ignored non-existing path: $path"
+  if [ $? -ne 0 ]; then
+    dbg "Skipped adding non-existing path: $path"
+    return 0;
   fi
+
+  add_str "$env_var" "$abs_path" "$sep_str"
+#  set +x
 }
 
 # https://unix.stackexchange.com/a/401978/21709

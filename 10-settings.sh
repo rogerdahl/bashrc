@@ -7,7 +7,8 @@ export true=1
 # Set to true or false
 #export BASHRC_DEBUG=false
 export BASHRC_DEBUG=true
-# (( BASHRC_DEBUG )) && printf 'Debugging...\n'
+# 'dbg' not yet available
+(( BASHRC_DEBUG )) && printf 'Debug level logging enabled\n'
 
 export XDG_CONFIG_HOME="$HOME/.config"
 

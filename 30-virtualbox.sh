@@ -89,9 +89,6 @@ vm_create() {
   echo "nic_mode = $nic_mode"
   echo "vdi_path = $vdi_path"
 
-  set -e
-  set -x
-
   mkdir -p "$ISO_ROOT"
   mkdir -p "$VM_ROOT"
 

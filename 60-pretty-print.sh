@@ -43,7 +43,7 @@ pcsv() {
 require source-highlight
 if cmd_is_installed 'source-highlight'; then
   LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
-  add_str LESS '-R' ' '
+  add_str 'LESS' '-R'  ' '
   export LESSOPEN LESS
 
   # When getting a list of the output options, it's called a language, but when selecting
@@ -55,5 +55,5 @@ fi
 
 # Make 'less' scroll lines just before a match into view (shows context)
 # and pass though ANSI color codes.
-add_str LESS 'j5' ' '
-add_str LESS '-R' ' '
+add_str 'LESS' 'j5' ' '
+add_str 'LESS' '-R' ' '

@@ -15,7 +15,6 @@ color() {
   printf "\033[01;%sm%s\033[00m\n" "${colors[${1}]}" "${2}"
 }
 
-################
 err_hiliter() {
   bash | perl -pe 's/\w/\033[01;31m\1\033[00m/gi; last unless defined $_;'
 
@@ -38,7 +37,7 @@ __p() {
   printf "%20s " "$(color "$1" "$2")"
   shift 2
   while (( "$#" )); do
-    str="$1"
+    local str="$1"
     shift
     # Replace the special string "sep" with a repeating string that fills the rest of the line.
     if [[ "$str" == "sep" ]]; then
@@ -149,7 +148,22 @@ exists() {
 }
 
 is_in_list() {
-  [[ "${!env_var}" =~ (^|"$sep")"$str"($|"$sep") ]] && return 0
+  arg=("$@") req=('string to check') opt=('env var name (without dollar sign)' 'separator')
+  usage arg req opt && return 1
+
+  local str="$1"
+  local env_var="$2"
+  local sep_str="$3"
+
+  # dbg "path=%s\n" "$path"
+  # dbg "sep_str=%s\n" "$sep_str"
+  # dbg "env_var=%s\n" "$env_var"
+
+  [[ -z "$env_var" ]] && env_var='PATH'
+  [[ -z "$sep_str" ]] && sep_str=':'
+
+
+  [[ "${!env_var}" =~ (^|"$sep_str")"$str"($|"$sep_str") ]] && return 0
   return 1
 }
 
@@ -157,6 +171,26 @@ is_in_list() {
 path() {
   echo -n "${1:-:${PATH}}" |
     sed -re 's/:+/\n/g'
+}
+
+# Print delimited string as list
+plist() {
+  arg=("$@")
+  req=('print command' 'string holding list delimited by separator')
+  opt=('separator (default=":")')
+  usage arg req opt && return 1
+
+  cmd="$1"
+  str="$2"
+  sep_str="$3"
+
+  # Add default delimiter, ":"
+  [[ -z "$sep_str" ]] && sep_str=":"
+
+  local IFS="$sep_str"
+  for s in ${str[*]}; do
+    $cmd " " "$s"
+  done
 }
 
 # Sort and remove any duplicates. Default to $PATH if no argument is provided.
@@ -243,51 +277,41 @@ clear_flag() {
 #   - String is already in list
 # - To use for argument lists, pass a single space, " ", as the delimiter. The env var
 # is created if it doesn't already exist.
+#
+# Bash syntax:
+#
+# - `${param:+word}` equivalent in Python is `"word" if param else ""`. In
+# `${PATH:+:${PATH}}`, the first `:` is fixed syntax and the second is the list
+# separator for PATH. So the first `PATH` is the param and `:${PATH}` is the
+# section that will get expanded or set to "". Result is that, when starting with
+# an empty path, the list will not have a trailing ":". The syntax does not deal
+# with any other cases, like PATH already having leading or trailing ":".
+# - `${!var}` is indirect variable read.
+# - `printf -v var` is indirect variable write.
 add_str() {
-#  __args=('env var name (without dollar sign)' 'string to add' 'separator')
-#  usage __in __args || return 1
+  arg=("$@") req=('env var name (without dollar sign)' 'string to add') opt=('separator')
+  usage arg req opt && return 1
 
-  #  echo 1
-  #	[[ "$#" -ne 4 ]] && {
-  #	  echo 3
-  #		# shellcheck disable=SC2016
-  #		echo "Usage: $0 <env var name (without dollar sign)> <string to add> <delimiter>"
-  #		return 1
-  #	}
-  #  echo 2
+  env_var="$1"
+  value="$2"
+  sep_str="$3"
 
-  #	[[ -n "$env_var" ]] || return
+  [[ -z "$sep_str" ]] && sep_str=":"
 
-  local env_var="$1"
-  local str="$2"
-  local sep="$3"
-
-  # dbg "env_var='%s'='%s', str='%s', sep='%s'\n" "$env_var" "${!env_var}" "$str" "$sep"
-
-  if [[ ! -n "$env_var" ]]; then
-    dbg "Skipped adding to \$$env_var: Empty string"
+  if is_in_list "$value"; then
+    dbg "Skipped adding \"$value\" to \$$env_var: Already in list"
+    plist 'dbg' "${!env_var}" "$sep_str"
     return 0
   fi
 
-  if is_in_list "$sep"; then
-    dbg "Skipped adding \"$str\" to \$$env_var: Already in list: ${!env_var}"
+  if [[ -z "$value" ]]; then
+    dbg "Skipped adding to \$$env_var: Value is empty"
     return 0
   fi
 
-  # dbg "Adding \"$str\" to front of \$$env_var"
-  # Bash syntax:
-  # - `${param:+word}` equivalent in Python is `"word" if param else ""`. In
-  # `${PATH:+:${PATH}}`, the first `:` is fixed syntax and the second is the list
-  # separator for PATH. So the first `PATH` is the param and `:${PATH}` is the
-  # section that will get expanded or set to "". Result is that, when starting with
-  # an empty path, the list will not have a trailing ":". The syntax does not deal
-  # with any other cases, like PATH already having leading or trailing ":".
-  # - `${!var}` is indirect variable read.
-  # - `printf -v var` is indirect variable write.
-  printf -v "$env_var" "%s" "${str}${!env_var:+${sep}${!env_var}}"
-  dbg "Added to \$$env_var: \"$str\""
-  dbg "-> ${!env_var}"
-  export "${env_var?}"
+  printf -v "$env_var" "%s" "${value}${!env_var:+${sep_str}${!env_var}}"
+  dbg "Added \"$value\" to \$$env_var. New list:"
+  plist 'dbg' "${!env_var}" "$sep_str"
 }
 
 # Add double quotes to string if it contains spaces, else return it unchanged.
@@ -303,6 +327,8 @@ usage() {
   # be combined to a single array. This declares the values as pass-by-reference, which
   # allows the arrays to be kept separate. The caller must not add "$" to the varaible
   # names (which currently caues IDEA based IDEs to complain about unused variables).
+  #
+  # 'declare' implicitly makes variables local.
   declare -n arg_arr=$1
   declare -n req_arr=$2
   declare -n opt_arr=$3
@@ -311,19 +337,16 @@ usage() {
   req_count="${#req_arr[@]}"
   opt_count="${#opt_arr[@]}"
 
-#  printf 'arg_count: %s\n' "$arg_count"
-#  printf 'req_count: %s\n' "$req_count"
-#  printf 'opt_count: %s\n' "$opt_count"
-
   (( arg_count >= req_count && arg_count <= (req_count + opt_count) )) && return 1;
 
   local arg_str="$([[ "$arg_arr" ]] && printf '"%s" ' "${arg_arr[@]}")"
   local req_str="$([[ "$req_arr" ]] && printf '[%s] ' "${req_arr[@]}")"
   local opt_str="$([[ "$opt_arr" ]] && printf '[%s (optional)] ' "${opt_arr[@]}")"
 
-#  printf 'arg_str: %s\n' "$arg_str"
-#  printf 'req_str: %s\n' "$req_str"
-#  printf 'opt_str: %s\n' "$opt_str"
+#  pdebug 'usage():'
+#  pdebug 'arg_str' "$arg_str" "(len=${arg_count})"
+#  pdebug 'req_str' "$req_str" "(len=${req_count})"
+#  pdebug 'opt_str' "$opt_str" "(len=${opt_count})"
 
   printf 'Usage: %s %s %s\n' "${FUNCNAME[1]}" "$req_str" "$opt_str"
   printf 'Received: %s\n' "$arg_str"
@@ -334,6 +357,7 @@ usage() {
 # Replace regular "alias" with one that includes logging.
 alias() {
   arg=("$@"); req=('name=value'); opt=(); usage arg req opt && return 1
+  # TODO: Skip alias for non-existing command
   # cmd_is_installed "$1" || return 0
   pinfo 'alias' "$@"
   command alias "$@"

@@ -4,7 +4,7 @@
 #
 # $ curl github.com:rogerdahl/bashrc/install | bash
 
-# Stop on error.
+# Exit on error.
 set -x
 
 echo "Check for and install Git if needed"

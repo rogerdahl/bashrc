@@ -55,15 +55,15 @@
 # Get current column position of the caret.
 # shellcheck disable=SC2046,SC2086
 get_caret_col() {
-  IFS=' ' set $(get_caret_pos)
-  printf '%s' ${*:1:1}
+  IFS=' ' read -ra arr <<< $(get_caret_pos)
+  printf '%s' "${arr[0]}"
 }
 
 # Get current row position of the caret.
 # shellcheck disable=SC2046,SC2086
 get_caret_row() {
-  IFS=' ' set $(get_caret_pos)
-  printf '%s' ${*:2:1}
+  IFS=' ' read -ra arr <<< $(get_caret_pos)
+  printf '%s' "${arr[1]}"
 }
 
 # Get current column and positions of the caret on format: "col pos".

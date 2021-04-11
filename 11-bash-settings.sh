@@ -82,6 +82,5 @@ set_opt() {
   true) x="-" ;;
   false) x="+" ;;
   esac
-
   set "$k" "$x"
 }

@@ -58,7 +58,7 @@ red_is_compiled || {
   red_test
 }
 
-padd "$red_so" ':' 'LD_PRELOAD'
+padd "$red_so" 'LD_PRELOAD'
 
 # Aliases to turn stderr coloring on and off (it's on by default).
 alias red-off='LD_PRELOAD_RED_OFF=$LD_PRELOAD; unset LD_PRELOAD'

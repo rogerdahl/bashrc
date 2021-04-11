@@ -15,6 +15,8 @@ AUTO_LS_AFTER_CD=true
 # By default, we disable debugging while creating the prompt. Any string is "true"
 DISABLE_PROMPT_DEBUG=true
 
+PROMPT_SEP_STR=" "
+
 export PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
 
 prompt_simple() {
@@ -35,21 +37,19 @@ function __prompt_command() {
   }
 
   PS1="$ "
-  #  PS1="X"
-  local sep=" "
 
   # Exit code of the previous command
   if [[ "$exit_code" != "0" ]]; then
-    add_str PS1 "$(space_quote "$(color 'red' "exit=$exit_code")")" "$sep"
+    PS1+="$(space_quote "$(color 'red' "exit=$exit_code")")$PROMPT_SEP_STR"
   else
-    add_str PS1 "$(space_quote "$(color 'green' "ok")")" "$sep"
+    PS1+="$(space_quote "$(color 'green' "ok")")$PROMPT_SEP_STR"
   fi
 
   # Git status
   # Add a character describing the status vs. remote.
   local git="$(__git_ps1 "%s")"
   [[ -n "$git" ]] && {
-    add_str PS1 "$(space_quote "$(color 'blue' "git=$git")")" "$sep"
+    PS1+="$(space_quote "$(color 'blue' "git=$git")")$PROMPT_SEP_STR"
   }
 
   # CWD relative to home if under home, and absolute otherwise (tries to match "\w").
@@ -57,11 +57,11 @@ function __prompt_command() {
   # Use basename of CWD if full CWD is more than half the width of the screen.
   [[ ${#cwd} -gt $((COLUMNS / 2)) ]] && cwd="$(basename "$cwd")"
   # current working directory, full path
-  add_str PS1 "$(space_quote "$(color 'blue' "$cwd")")" "$sep"
+  PS1+="$(space_quote "$(color 'blue' "$cwd")")$PROMPT_SEP_STR"
   # 24h hour:minute:second
-  add_str PS1 "$(space_quote "$(color 'yellow' '\t')")" "$sep"
+  PS1+="$(space_quote "$(color 'yellow' '\t')")$PROMPT_SEP_STR"
   # user @ hostname
-  add_str PS1 "$(space_quote "$(color 'blue' '\u@\h')")" "$sep"
+  PS1+="$(space_quote "$(color 'blue' '\u@\h')")$PROMPT_SEP_STR"
 
   ((DISABLE_PROMPT_DEBUG)) && {
     BASHRC_DEBUG=$tmp_debug

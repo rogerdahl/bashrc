@@ -27,8 +27,6 @@ BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # Source scripts 00 - 19. These are general utilities intended for use both in
 # interactive shell and scripts.
 . "$BASHRC_DIR/util.sh"
-dbg "\$BASHRC_DIR=$BASHRC_DIR"
-
 padd "$BASHRC_DIR/bin"
 
 pinfo 'bashrc.d...'
