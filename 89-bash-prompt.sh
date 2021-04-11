@@ -25,7 +25,7 @@ prompt_simple() {
 
 prev_exit='x'
 
-function __prompt_command() {
+__prompt_command() {
   cur_exit="${PIPESTATUS[-1]}"
 
   ((DISABLE_PROMPT_DEBUG)) && {
@@ -41,23 +41,23 @@ function __prompt_command() {
   PS1=""
 
   # user @ hostname
-  PS1+="$(space_quote "$(color 'blue' '\u@\h')")$PROMPT_SEP_STR"
+  PS1+="$(quote_space "$(color_prompt 'blue' '\u@\h')")$PROMPT_SEP_STR"
 
   # 24h hour:minute:second
-  PS1+="$(space_quote "$(color 'yellow' '\t')")$PROMPT_SEP_STR"
+  PS1+="$(quote_space "$(color_prompt 'yellow' '\t')")$PROMPT_SEP_STR"
 
   # CWD, relative to home if under home, and absolute otherwise (tries to match "\w")
   local cwd="${PWD/$HOME/\~}"
   # Use basename of CWD if full CWD is more than half the width of the screen.
   [[ ${#cwd} -gt $((COLUMNS / 2)) ]] && cwd="$(basename "$cwd")"
-  PS1+="$(space_quote "$(color 'blue' "$cwd")")$PROMPT_SEP_STR"
+  PS1+="$(quote_space "$(color_prompt 'blue' "$cwd")")$PROMPT_SEP_STR"
 
   # Exit code of the previous command
   (( cur_exit == prev_exit )) || {
     if (( cur_exit )); then
-      PS1+="$(space_quote "$(color 'red' "$cur_exit")")$PROMPT_SEP_STR"
+      PS1+="$(quote_space "$(color_prompt 'red' "$cur_exit")")$PROMPT_SEP_STR"
     else
-      PS1+="$(space_quote "$(color 'green' "ok")")$PROMPT_SEP_STR"
+      PS1+="$(quote_space "$(color_prompt 'green' 'ok')")$PROMPT_SEP_STR"
     fi
   }
   prev_exit="$cur_exit"
@@ -66,7 +66,7 @@ function __prompt_command() {
   # Add a character describing the status vs. remote.
   local git="$(__git_ps1 '%s')"
   [[ -n "$git" ]] && {
-    PS1+="$(space_quote "$(color 'magenta' "$git")")$PROMPT_SEP_STR"
+    PS1+="$(quote_space "$(color_prompt 'magenta' "$git")")$PROMPT_SEP_STR"
   }
 
   PS1+="\$$PROMPT_SEP_STR"
@@ -75,3 +75,21 @@ function __prompt_command() {
     BASHRC_DEBUG=$tmp_debug
   }
 }
+
+# Wrap a string with ANSI color codes for use in the prompt. BASH requires characters
+# that don't advance the caret to be wrapped with escape codes, `\[` and `\]`, when
+# used in the prompt.
+color_prompt() {
+  printf "\\[\033[01;%sm\\]%s\\[\033[00m\\]\n" "${ANSI_COLORS[$1]}" "$2"
+}
+
+
+#color_prompt() {
+#  printf "%s" "$(color "$1" "${@::1}")"
+#  case $1 in
+#  *\ *) s="\"$1\"" ;;
+#  *) s="$1" ;;
+#  esac
+#  s="\\[$s\\]"
+#  printf '%s' "$s"
+#}
