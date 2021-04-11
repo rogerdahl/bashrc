@@ -4,7 +4,7 @@
 # are generally useful and available in the interactive shell as well.
 
 # Wrap text in one of the 8 basic ANSI colors.
-declare -A colors=([black]=30 [red]=31 [green]=32 [yellow]=33 [blue]=34 [magenta]=35 [cyan]=36 [white]=37)
+declare -A ANSI_COLORS=([black]=30 [red]=31 [green]=32 [yellow]=33 [blue]=34 [magenta]=35 [cyan]=36 [white]=37)
 color() {
   [[ $# -eq 2 ]] || {
     printf "Usage: color black/red/green/yellow/blue/magenta/cyan/white <text to print in color>\n"
@@ -12,7 +12,7 @@ color() {
   }
   # Bash syntax:
   # \033 is the escape character in octal, 27 decimal, 0x1b hex.
-  printf "\033[01;%sm%s\033[00m\n" "${colors[${1}]}" "${2}"
+  printf "\033[01;%sm%s\033[00m\n" "${ANSI_COLORS[${1}]}" "${2}"
 }
 
 err_hiliter() {
@@ -314,7 +314,7 @@ add_str() {
 }
 
 # Add double quotes to string if it contains spaces, else return it unchanged.
-space_quote() {
+quote_space() {
   case $1 in
   *\ *) printf "\"%s\"" "$1" ;;
   *) printf "%s" "$1" ;;
