@@ -6,7 +6,7 @@ stderr in red.
 
 stderred hooks on write() and a family of stream functions (fwrite, fprintf,
 error...) from libc in order to colorize all stderr output that goes to
-terminal thus making it distinguishable from stdout.  Basically it wraps text
+terminal thus making it distinguishable from stdout. Basically it wraps text
 that goes to file with descriptor "2" with proper ANSI escape codes making text
 red.
 
@@ -51,7 +51,7 @@ in your .bashrc/.zshrc:
 
 #### Multi-arch Linux and FreeBSD
 
-On some Linux distros you can install 32-bit packages on 64-bit system.  Shared
+On some Linux distros you can install 32-bit packages on 64-bit system. Shared
 libraries compiled for 64-bit doesn't work with 32-bit binaries though. It
 happens that 64-bit binaries call 32-bit ones resulting in warning message
 printed to terminal about not compatible `LD_PRELOAD` shared lib.
@@ -75,7 +75,7 @@ and export `LD_PRELOAD` like this in your shell's config:
 
     export LD_PRELOAD="/path/to/stderred/\$LIB/libstderred.so${LD_PRELOAD:+:$LD_PRELOAD}"
 
-_\* Note that [there is no support for $LIB token on Ubuntu](http://comments.gmane.org/gmane.comp.lib.glibc.user/974)._
+_\* Note that [there is no support for \$LIB token on Ubuntu](http://comments.gmane.org/gmane.comp.lib.glibc.user/974)._
 
 ### OSX
 
@@ -134,7 +134,7 @@ Here's an example for bold red:
 ### Program Blacklisting
 
 Some programs abuse stderr and print stuff on it even when they really
-shouldn't.  If you want to turn off stderred for particular programs you can
+shouldn't. If you want to turn off stderred for particular programs you can
 export `STDERRED_BLACKLIST` with a desired POSIX Extended Regular Expression
 matching names of these programs.
 
@@ -155,14 +155,14 @@ writing to stderr though.
 
 Current implementation:
 
-* [Marcin Kulik](https://github.com/sickill/)
-* [Chris Hoffman](https://github.com/cehoffman/)
-* [Brian Tarricone](https://github.com/kelnos/)
+- [Marcin Kulik](https://github.com/sickill/)
+- [Chris Hoffman](https://github.com/cehoffman/)
+- [Brian Tarricone](https://github.com/kelnos/)
 
 [Original concept](http://www.asheesh.org/note/software/stderred.html) and
 [initial implementation](http://git.asheesh.org/?p=zzz/colorize-stderr.git;a=summary):
 
-* Asheesh Laroia
+- Asheesh Laroia
 
 ## License
 

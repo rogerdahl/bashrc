@@ -1,9 +1,18 @@
 # Terminal
 
-# https://stackoverflow.com/a/52944692/442006
-
-# Bash syntax:
+#!/usr/bin/env bash
 #
+# curpos -- demonstrate a method for fetching the cursor position in bash
+#           modified version of https://github.com/dylanaraps/pure-bash-bible#get-the-current-cursor-position
+#
+#========================================================================================
+#-
+#-  THE METHOD
+#-
+#-  IFS='[;' read -p $'\e[6n' -d R -a pos -rs || echo "failed with error: $? ; ${pos[*]}"
+#-
+#-  THE BREAKDOWN
+#-
 #-  $'\e[6n'                  # escape code, {ESC}[6n;
 #-
 #-    This is the escape code that queries the cursor postion. see XTerm Control Sequences (1)
@@ -44,33 +53,41 @@
 #-  ---
 #-  (1) XTerm Control Sequences
 #-      http://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Functions-using-CSI-_-ordered-by-the-final-character_s_
+#========================================================================================
+#-
+#- CAVEATS
+#-
+#- - if this is run inside of a loop also using read, it may cause trouble.
+#-   to avoid this, use read -u 9 in your while loop. See safe-find.sh (*)
+#-
+#-
+#-  ---
+#-  (2) safe-find.sh by l0b0
+#-      https://github.com/l0b0/tilde/blob/master/examples/safe-find.sh
+#=========================================================================================
 
-# Get current position of the caret. Correctly ignores ANSI color codes and other
-# control characters that don't move the cursor.
-#
-# Note: To use this inside of a loop that also uses `read`, use read -u 9 in the outer
-# (calling) loop. See safe-find.sh:
-# https://github.com/l0b0/tilde/blob/master/examples/safe-find.sh
-#
-# Get current column position of the caret.
-# shellcheck disable=SC2046,SC2086
+
+#================================================================
+# fetch_cursor_position: returns the users cursor position
+#                        at the time the function was called
+# output "<row>:<col>"
+#================================================================
 get_caret_col() {
-  IFS=' ' read -ra arr <<< $(get_caret_pos)
-  printf '%s' "${arr[0]}"
+  local pos
+  IFS='[;' read -p $'\e[6n' -d R -a pos -rs || echo "failed with error: $? ; ${pos[*]}"
+  echo "${pos[2]}"
 }
 
-# Get current row position of the caret.
-# shellcheck disable=SC2046,SC2086
 get_caret_row() {
-  IFS=' ' read -ra arr <<< $(get_caret_pos)
-  printf '%s' "${arr[1]}"
+  local pos
+  IFS='[;' read -p $'\e[6n' -d R -a pos -rs || echo "failed with error: $? ; ${pos[*]}"
+  echo "${pos[1]}"
 }
 
-# Get current column and positions of the caret on format: "col pos".
 get_caret_pos() {
   local pos
   IFS='[;' read -p $'\e[6n' -d R -a pos -rs || echo "failed with error: $? ; ${pos[*]}"
-  printf '%s %s' "${pos[2]}" "${pos[1]}"
+  echo "${pos[2]}:${pos[1]}"
 }
 
 
@@ -79,11 +96,12 @@ get_caret_pos() {
 #----------------------------------------------------------------------
 #
 
-test_caret_pos() {
+test_cursor_position() {
   MAX=$(( $(tput cols) - 15 ))
+
   for _ in {1..10}; do
     cols=$(( $RANDOM % $MAX ))
     printf "%${cols}s"  | tr " " "="
-    echo " $(get_caret_pos)"
+    echo " $(fetch_cursor_position)"
   done
 }

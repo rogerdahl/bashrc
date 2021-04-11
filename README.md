@@ -51,7 +51,7 @@ number). `DD` range from `90` to `99` has been left open for this purpose.
 
 # Overview
 
-* When an interactive bash shell is opened, the shell scripts on
+- When an interactive bash shell is opened, the shell scripts on
   form `<digit><digit>-<name>.sh` are sourced in ascending numerical order. All other
   scripts and files are only used if they are referenced by one of the numbered scripts.
 
@@ -63,15 +63,15 @@ number). `DD` range from `90` to `99` has been left open for this purpose.
   When the process is completed, the interactive environment represents the final
   result.
 
-* In addition to describing the order in which the scripts are sourced, the leading two
+- In addition to describing the order in which the scripts are sourced, the leading two
   digits also describe categories, as follows:
 
-- `00 - 09` - Reserved for local use
-- `10 - 19` - Basic settings and utilities useful in both interactive shell and scripts
-- `30 - 39` - Set up development and build environments
-- `60 - 69` - Shortcuts and convenience commands for working in the shell
-- `80 - 89` - GUI related scripting / automation
-- `90 - 99` - Reserved for local use
+* `00 - 09` - Reserved for local use
+* `10 - 19` - Basic settings and utilities useful in both interactive shell and scripts
+* `30 - 39` - Set up development and build environments
+* `60 - 69` - Shortcuts and convenience commands for working in the shell
+* `80 - 89` - GUI related scripting / automation
+* `90 - 99` - Reserved for local use
 
 # Features
 
