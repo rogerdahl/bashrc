@@ -23,6 +23,7 @@ BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # We want to be able to drop any executable dependencies for any of the scripts into
 # ./bashrc.d/bin without worrying about if that's in the path yet, so we add it here.
 #PATH="$BASHRC_DIR/bin${PATH:+:${PATH}}"
+
 #export PATH
 
 # Source scripts 00 - 19. These are general utilities intended for use both in
