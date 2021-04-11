@@ -151,19 +151,18 @@ is_in_list() {
   arg=("$@") req=('string to check') opt=('env var name (without dollar sign)' 'separator')
   usage arg req opt && return 1
 
-  local str="$1"
-  local env_var="$2"
+  local env_var="$1"
+  local value="$2"
   local sep_str="$3"
 
-  # dbg "path=%s\n" "$path"
-  # dbg "sep_str=%s\n" "$sep_str"
-  # dbg "env_var=%s\n" "$env_var"
+#  printf "value=%s\n" "$value"
+#  printf "env_var=%s\n" "$env_var"
+#  printf "env_var_value=%s\n" "${!env_var}"
+#  printf "sep_str=%s\n" "$sep_str"
 
   [[ -z "$env_var" ]] && env_var='PATH'
-  [[ -z "$sep_str" ]] && sep_str=':'
-
-
-  [[ "${!env_var}" =~ (^|"$sep_str")"$str"($|"$sep_str") ]] && return 0
+  rx="(^|${sep_str})$value(\$|${sep_str})"
+  [[ "${!env_var}" =~ $rx ]] && return 0
   return 1
 }
 
@@ -298,11 +297,11 @@ add_str() {
 
   [[ -z "$sep_str" ]] && sep_str=":"
 
-  if is_in_list "$value"; then
+  is_in_list "$env_var" "$value" "$sep_str" && {
     dbg "Skipped adding \"$value\" to \$$env_var: Already in list"
     plist 'dbg' "${!env_var}" "$sep_str"
     return 0
-  fi
+  }
 
   if [[ -z "$value" ]]; then
     dbg "Skipped adding to \$$env_var: Value is empty"
@@ -359,6 +358,6 @@ alias() {
   arg=("$@"); req=('name=value'); opt=(); usage arg req opt && return 1
   # TODO: Skip alias for non-existing command
   # cmd_is_installed "$1" || return 0
-  pinfo 'alias' "$@"
+  dbg 'alias' "$@"
   command alias "$@"
 }

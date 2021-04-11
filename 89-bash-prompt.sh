@@ -23,8 +23,10 @@ prompt_simple() {
   export PROMPT_COMMAND='{ PS1="$ "; }'
 }
 
+prev_exit='x'
+
 function __prompt_command() {
-  local exit_code=${PIPESTATUS[-1]} #"$?"
+  cur_exit="${PIPESTATUS[-1]}"
 
   ((DISABLE_PROMPT_DEBUG)) && {
     tmp_debug=$BASHRC_DEBUG
@@ -36,32 +38,38 @@ function __prompt_command() {
     prev="$PWD"
   }
 
-  PS1="$ "
+  PS1=""
 
-  # Exit code of the previous command
-  if [[ "$exit_code" != "0" ]]; then
-    PS1+="$(space_quote "$(color 'red' "exit=$exit_code")")$PROMPT_SEP_STR"
-  else
-    PS1+="$(space_quote "$(color 'green' "ok")")$PROMPT_SEP_STR"
-  fi
+  # user @ hostname
+  PS1+="$(space_quote "$(color 'blue' '\u@\h')")$PROMPT_SEP_STR"
 
-  # Git status
-  # Add a character describing the status vs. remote.
-  local git="$(__git_ps1 "%s")"
-  [[ -n "$git" ]] && {
-    PS1+="$(space_quote "$(color 'blue' "git=$git")")$PROMPT_SEP_STR"
-  }
+  # 24h hour:minute:second
+  PS1+="$(space_quote "$(color 'yellow' '\t')")$PROMPT_SEP_STR"
 
-  # CWD relative to home if under home, and absolute otherwise (tries to match "\w").
+  # CWD, relative to home if under home, and absolute otherwise (tries to match "\w")
   local cwd="${PWD/$HOME/\~}"
   # Use basename of CWD if full CWD is more than half the width of the screen.
   [[ ${#cwd} -gt $((COLUMNS / 2)) ]] && cwd="$(basename "$cwd")"
-  # current working directory, full path
   PS1+="$(space_quote "$(color 'blue' "$cwd")")$PROMPT_SEP_STR"
-  # 24h hour:minute:second
-  PS1+="$(space_quote "$(color 'yellow' '\t')")$PROMPT_SEP_STR"
-  # user @ hostname
-  PS1+="$(space_quote "$(color 'blue' '\u@\h')")$PROMPT_SEP_STR"
+
+  # Exit code of the previous command
+  (( cur_exit == prev_exit )) || {
+    if (( cur_exit )); then
+      PS1+="$(space_quote "$(color 'red' "$cur_exit")")$PROMPT_SEP_STR"
+    else
+      PS1+="$(space_quote "$(color 'green' "ok")")$PROMPT_SEP_STR"
+    fi
+  }
+  prev_exit="$cur_exit"
+
+  # Git status
+  # Add a character describing the status vs. remote.
+  local git="$(__git_ps1 '%s')"
+  [[ -n "$git" ]] && {
+    PS1+="$(space_quote "$(color 'magenta' "$git")")$PROMPT_SEP_STR"
+  }
+
+  PS1+="\$$PROMPT_SEP_STR"
 
   ((DISABLE_PROMPT_DEBUG)) && {
     BASHRC_DEBUG=$tmp_debug

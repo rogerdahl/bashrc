@@ -26,3 +26,5 @@ add_sudo() {
     cmd_is_installed "$cmd" && alias "$cmd"="sudo $cmd"
   done
 }
+
+add_sudo

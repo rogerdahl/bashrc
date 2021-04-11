@@ -55,7 +55,6 @@ padd() {
   fi
 
   add_str "$env_var" "$abs_path" "$sep_str"
-#  set +x
 }
 
 # https://unix.stackexchange.com/a/401978/21709
