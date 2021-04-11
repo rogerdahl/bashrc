@@ -1,6 +1,5 @@
 # Global settings
 
-# We use these for boolean flags.
 # shellcheck disable=SC2034
 export false=0
 export true=1
