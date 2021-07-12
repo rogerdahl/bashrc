@@ -70,7 +70,7 @@ docker_restore() {
 
 docker-stop-all() { docker stop $(docker ps -q); }
 
-docker-shell() { docker exec -it $(docker-last) bash $@; }
+docker-shell() { docker exec -it $(docker-last) bash "$@"; }
 
 docker-ls() { docker exec -it $(docker-last) ls -al /root; }
 

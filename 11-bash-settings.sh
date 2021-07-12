@@ -19,18 +19,60 @@ eval "$(dircolors)"
 
 # Misc global settings
 
-# Allow regex in glob.
-# Syntax +(regex). E.g.: ls /tmp/file.+([0-9])
-# Note: Also set in util.sh.
+# Enable regex glob.
+# - Syntax +(regex). E.g.: ls /tmp/file.+([0-9])
 shopt -s extglob
+# Enable recursive directory glob.
+# - Syntax: `**` expands recursively to all matching nested paths.
+# - E.g.:
+# -- All files and dirs:           printf '%s\n' **
+# -- All dirs:                     printf '%s\n' **/
+# -- All .myext files in all dirs: printf '%s\n' **/*.myext
+# - I don't think there's a way to match all files without also matching all dirs?
+# - `**` can be used with a partial dir name, but each parent dir must match the glob,
+# so `x**` will not match `x1/x2/y/x3`. Instead, combine `**`, with regular `*` glob.
+# - E.g.:
+# -- All dirs with names starting with `x` (regardless of parent names):
+# printf '%s\n'**/x*/
+shopt -s globstar
+
+# Enable glob that does not match anything to return an error instead of falling back to
+# being interpreted as a literal dir or file name.
+# - Fallback to literal name is confusing, and never what one wants, since wildcard
+# characters (`*`, `?`) are avoided in dir and path names. Actually, they're pretty much
+# only needed in literal context to fix errors caused by not using `failglob` :)
+# - To pass globs and wildcard characters to commands without triggering the error,
+# single quote them.
+# - E.g.:
+# - `vim *.py` returns an error if there are no `.py` files in the current dir instead
+shopt -s failglob
+
+# Enable glob that does match anything to fall back to zero arguments (an empty array)
+# instead of a literal dir or file name.
+# - Not enabled by default, as I think `failglob` is a much better way to handle
+# non-matching globs.
+# shopt -s nullglob
+
+# Enable matching dot-files with `*`.
+# - Not enabled by default, as it's often convenient to not have dot files (which are
+# usually 'invisible'), included in globs. WITHOUT dotglob, use two globs to include
+# dot files, and combine with brace expansion (which is done before globbing) to avoid
+# repeating a directory path. E.g.,:
+# WITHOUT dotglob: printf '%s\n' a/b/c/{.*,*}
+# shopt -s dotglob
+
+# Enable matching dot-files without matching '.' and '..'
+# E.g.:
+# All dot files in current dir (.config, .bashrc, etc), but not `.` (this dir itself) or
+# `..` (parent dir):
+# printf '%s\n' .*
+GLOBIGNORE=.:..
+
 # Check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 # CD into a directory by typing just the name
 shopt -s autocd
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-shopt -s globstar
 
 # History
 
@@ -63,10 +105,6 @@ shopt -s checkwinsize
 # more directories and subdirectories.
 # CD into a directory by typing just the name
 shopt -s autocd
-
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-shopt -s globstar
 
 # set bash option
 # https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html

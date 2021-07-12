@@ -25,6 +25,9 @@ alias m4b-tool='docker run -it --rm -u $(id -u):$(id -g) -v "$(pwd)":/mnt m4b-to
 
 alias trash-empty='gio trash --empty'
 
+# Flatten dir hierarchy, show only mtime,size,name, order by mtime
+alias find-flat="find . -type f -printf '%CY-%Cd-%Cm %CH:%CM:%CS %14s %f\n' | sort"
+
 ## If this is an xterm set the title to user@host:dir
 #case "$TERM" in
 #xterm* | rxvt*)
@@ -39,7 +42,7 @@ alias m4b_tool='docker run -it --rm -u $(id -u):$(id -g) -v "$(pwd)":/mnt m4b-to
 
 # Invoke a command with '--help' and page the result
 h() {
-  "$1" --help | bat --language=sh
+  "$1" --help | command rg --replace ’ --passthrough \' | bat --language=sh
 }
 
 # MP3, ID3
@@ -70,7 +73,7 @@ alias less='less -i'
 alias make='make -j16'
 # Make pipe look like terminal
 faketty() {
-  script -qfc "$(printf "%q " "$@")" /dev/null
+  script -qfc "$(printf "%q \n" "$@")" /dev/null
 }
 
 # Locate with ls -l on each result
@@ -79,9 +82,6 @@ locates() { locate -0 "$1" | xargs -0 --no-run-if-empty ls -ld; }
 #
 # Alias
 #
-
-# Capture stdin in X clipboard, removing final newline
-alias clip="perl -pe 'chomp if eof' | xclip -se c"
 
 alias grep='grep --color=auto --perl-regexp'
 #alias fgrep='fgrep --color=auto'
@@ -125,3 +125,26 @@ alias tz='tar -c -I pxz -f'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 alias xml="xmlstarlet"
+
+# https://www.thegeekstuff.com/2008/10/6-awesome-linux-cd-command-hacks-productivity-tip3-for-geeks/
+
+# cd up
+alias ..="cd .."
+alias ..2="cd ../.."
+alias ..3="cd ../../.."
+alias ..4="cd ../../../.."
+alias ..5="cd ../../../../.."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias cd..="cd .."
+alias cd...="cd ../.."
+alias cd....="cd ../../.."
+alias cd.....="cd ../../../.."
+alias cd......="cd ../../../../.."
+
+# mkdir + cd
+function md() {
+  mkdir -p "$@" && eval cd "\"\$$#\""
+}

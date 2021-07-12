@@ -20,6 +20,23 @@ require() {
   return $missing
 }
 
+
+# Ctrl+C - SIGINT
+# Ctrl+\ - SIGQUIT
+# Ctrl+Z - SIGTSTP
+
+
+
+require_cmd() {
+  arg=("$@") req=('name of command required to be in PATH') opt=()
+  usage arg req opt && return 1
+  cmd_str="$1"
+  abort
+  cmd_is_installed cmd_str || {
+    printf >&2 "Missing a required command: %s\n" "$cmd_str"
+  }
+}
+
 # Add an apt package to the list of deps
 #require() {
 #  pkg="$1"

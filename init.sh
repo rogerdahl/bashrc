@@ -19,6 +19,10 @@ printf 'bashrc.d...\n'
 
 # This dir should be used by bashrc.d scripts when building internal paths.
 BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+BASHRC_BIN_DIR="${BASHRC_DIR}/bin"
+
+# Utils that are not shell scripts
+padd "$BASHRC_BIN_DIR"
 
 # We want to be able to drop any executable dependencies for any of the scripts into
 # ./bashrc.d/bin without worrying about if that's in the path yet, so we add it here.
@@ -29,7 +33,6 @@ BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # Source scripts 00 - 19. These are general utilities intended for use both in
 # interactive shell and scripts.
 . "$BASHRC_DIR/util.sh"
-padd "$BASHRC_DIR/bin"
 
 # Source scripts 20-99. These provide functionality intended for use in interactive
 # shell.

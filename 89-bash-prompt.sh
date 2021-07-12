@@ -5,6 +5,12 @@
 # to draw on.
 
 # Debugging:
+# This script runs every time a new prompt is to be displayed, so anythig that it
+# writes to stdout or stderr is printed before every prompt. Unless specifically
+# debugging the script, the output interferes with other use, including debugging
+# of other scripts. So output from this script, including debug level output, is
+# controlled separately from other output, and is normally disabled.
+#
 # - BASHRC_DEBUG is normally turned off by init.sh just before exit, so debug output is
 # not shown. To enable debug output for this function, `export BASHRC_DEBUG='y'` in the
 # interactive shell.

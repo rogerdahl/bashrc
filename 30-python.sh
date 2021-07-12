@@ -1,3 +1,8 @@
+# Print details about the Python interpreter that starts starts when runnng 'python' in
+# the current shell.
+py_check() {
+  python "${BASHRC_DIR}/bin/py_which.py"
+}
 # Python
 
 # Aliases are only available in interactive commands and sourced scripts.
@@ -32,3 +37,4 @@ alias sys='sudo systemctl'
 alias sysj='sudo journalctl'
 alias sysu='systemctl --user'
 alias sysju='journalctl --user'
+# todo: move systemd aliases to better location

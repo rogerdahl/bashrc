@@ -77,12 +77,12 @@ pyenv_install_venv() {
   py_ver="$1"
   venv="$2"
   echo "pyenv_install_venv() py_ver=$py_ver venv=$venv"
-  [[ -n "$py_ver" ]] || [[ -n "$venv" ]] || {
+  [[ -n $py_ver ]] || [[ -n $venv ]] || {
     echo "Usage $0 <CPython version (x.y.z)> <name of virtualenv>"
     return 1
   }
   pyenv_install_py_ver "$py_ver"
-  pyenv-install-basic-packages
+  pyenv_install_basic_packages
   pyenv virtualenv "$py_ver" "$venv"
 }
 
@@ -93,7 +93,7 @@ pyenv_install_py_ver() {
     echo "Usage $0 <CPython version (x.y.z)>"
     return 1
   }
-  pyenv-is_installed-ver "$py_ver" && return 0
+  pyenv_is_installed_ver "$py_ver" && return 0
   export CONFIGURE_OPTS=--enable-shared
   export CFLAGS=-O3
   export MAKE_OPTS=-j16
@@ -128,12 +128,54 @@ pyenv_is_installed_venv() {
 }
 
 pyenv_init() {
-  if is_dir "$HOME/.pyenv" && ! cmd_is_installed 'pyenv'; then
-    export PYENV_ROOT="$HOME/.pyenv"
-    padd "$PYENV_ROOT/bin"
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
-  fi
+  ! is_dir "$HOME/.pyenv" && {
+    printf 'Error: pyenv has not been installed (missing ~/.pyenv)\n'
+    return 1
+  }
+  cmd_is_installed 'pyenv' && {
+    printf 'Error: pyenv already initialized\n'
+    return 1
+  }
+  printf 'Initializing pyenv\n'
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  #    padd "$PYENV_ROOT/bin"
+  eval "$(pyenv init --path)"
+  #    eval "$(pyenv virtualenv-init -)"
+}
+
+pyenv_deinit() {
+  pyenv_root="$(pyenv root)"
+
+  [[ -z $pyenv_root ]] && {
+    printf 'Error: pyenv command not available (already deinitialized?)\n'
+    return 1
+  }
+
+  [[ -n ${PYENV_VIRTUAL_ENV+x} ]] && {
+    printf 'Deactivating current pyenv virtualenv\n'
+    pyenv deactivate
+  }
+
+  printf 'Deactivating pyenv\n'
+
+  # Idiomatic way to split the path. IFS is modified only for the read. Global IFS is
+  # not changed.
+  IFS=":" read -r -d '' -a path_arr <<<"$PATH"
+  declare -a new_path
+
+  for p in "${path_arr[@]}"; do
+    echo "$p"
+    [[ $p =~ $pyenv_root ]] || {
+      abs_path="$(cd "$(dirname "$p")" 2>/dev/null && pwd)/$(basename "$p")"
+      [[ -n $abs_path ]] && {
+        new_path+=("$abs_path")
+      }
+    }
+  done
+
+  sep=':'
+  printf -v PATH '%s' "$(join_arr new_path sep)"
 }
 
 pyenv_init
@@ -153,7 +195,7 @@ pip_install_core() {
 pip_up() {
   pip_path="$(pyenv which pip)"
   [[ -n "$(find "$pip_path" -not -newerct '3 days ago')" ]] && {
-    pip_up-now
+    pip_up_now
     touch "$pip_path"
   }
 }

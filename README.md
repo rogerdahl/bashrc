@@ -13,8 +13,8 @@ See `Shared` below for a version that does not modify any existing files.
 $ curl github.com:rogerdahl/bashrc/install | bash
 ```
 
-The install uses `git clone` to create a copy of this repository in `~/bin/bashrc.d`,
-creating the directories as needed.
+The installation uses `git clone` to create a copy of this repository in
+`~/bin/bashrc.d`, creating the directories as needed.
 
 It then moves the original `~/.bashrc` to `~/bin/bashrc.d/_bashrc.original` and replaces
 it with a call to `~/bin/bashrc.d/bashrc`.

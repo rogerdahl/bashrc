@@ -36,13 +36,13 @@ __p() {
   # Print right adjusted. The ANSI color codes must be included in the count.
   printf "%20s " "$(color "$1" "$2")"
   shift 2
-  while (( "$#" )); do
+  while (("$#")); do
     local str="$1"
     shift
     # Replace the special string "sep" with a repeating string that fills the rest of the line.
     if [[ "$str" == "sep" ]]; then
-        # If 'sep' is not the last arg, use the next arg as the string to repeat.
-      if (( "$#" )); then
+      # If 'sep' is not the last arg, use the next arg as the string to repeat.
+      if (("$#")); then
         sep_str="$1"
         shift
       else
@@ -51,7 +51,7 @@ __p() {
       str="$(sep "$sep_str")"
     fi
     printf '%s' "$str"
-    (( "$#" )) && printf ' '
+    (("$#")) && printf ' '
   done
   printf '\n'
 }
@@ -110,7 +110,7 @@ sep() {
   local fill_len=$((COLUMNS - cur_col))
   local full_count=$((fill_len / sep_len))
   local rem_count=$((fill_len - (full_count * sep_len)))
-  for (( i = 0; i < full_count; i++ )); do
+  for ((i = 0; i < full_count; i++)); do
     printf '%s' "$sep_str"
   done
   printf '%s' "${sep_str::$rem_count}"
@@ -118,13 +118,13 @@ sep() {
 
 # Debugging for bashrc.d itself.
 dbg() {
-  (( BASHRC_DEBUG )) && pdebug "${@}"
+  ((BASHRC_DEBUG)) && pdebug "${@}"
 }
 
 # Return true if the script is sourced (invoked with "source <script>" or ". <script>".
 is_sourced() {
-  [[ "$0" == "${BASH_SOURCE[0]}" ]] || return 1;
-  return 0;
+  [[ "$0" == "${BASH_SOURCE[0]}" ]] || return 1
+  return 0
 }
 
 cmd_is_installed() {
@@ -155,10 +155,10 @@ is_in_list() {
   local value="$2"
   local sep_str="$3"
 
-#  printf "value=%s\n" "$value"
-#  printf "env_var=%s\n" "$env_var"
-#  printf "env_var_value=%s\n" "${!env_var}"
-#  printf "sep_str=%s\n" "$sep_str"
+  #  printf "value=%s\n" "$value"
+  #  printf "env_var=%s\n" "$env_var"
+  #  printf "env_var_value=%s\n" "${!env_var}"
+  #  printf "sep_str=%s\n" "$sep_str"
 
   [[ -z "$env_var" ]] && env_var='PATH'
   rx="(^|${sep_str})$value(\$|${sep_str})"
@@ -166,13 +166,21 @@ is_in_list() {
   return 1
 }
 
-# Print argument split to lines. Default to $PATH if no argument is provided.
+#split() {
+#  # env
+#  # sep
+#  declare -a path_arr
+#  IFS=':' read -r -d '' -a path_arr <<< "$!{PATH}"
+#}
+
 path() {
-  echo -n "${1:-:${PATH}}" |
-    sed -re 's/:+/\n/g'
+  declare -a path_arr
+  IFS=":" read -r -d '' -a path_arr <<<"$PATH"
+  printf 'Path, split by ":":\n'
+  IFS=":" printf '  %s\n' ${path_arr[*]}
 }
 
-# Print delimited string as list
+# Print delimited string as list, one entry per line
 plist() {
   arg=("$@")
   req=('print command' 'string holding list delimited by separator')
@@ -187,9 +195,30 @@ plist() {
   [[ -z "$sep_str" ]] && sep_str=":"
 
   local IFS="$sep_str"
-  for s in ${str[*]}; do
-    $cmd " " "$s"
-  done
+  #  for s in ${str[*]}; do
+  IFS=":" printf '  %s\n' ${cmd[*]}
+  #    $cmd " " "$s"
+  #  done
+}
+
+# Split string to array.
+# An array cannot be returned directly in bash. Instead, the caller creates an array and
+# passes the NAME of the array. This method then fills the array in with the result.
+split() {
+  out_name="$1"
+  in_str="$2"
+  [[ -z $in_str ]] && in_str="PATH"
+  sep_str="$3"
+  [[ -z $sep_str ]] && sep_str=":"
+  IFS="${sep_str}" read -r -d '' -a $out_name <<<"${in_str}"
+}
+
+# Print PATH, one line per entry
+ppath() {
+  declare -a ork
+  split ork $PATH
+  printf '$PATH:\n'
+  printf '  %s\n' ${ork[*]}
 }
 
 # Sort and remove any duplicates. Default to $PATH if no argument is provided.
@@ -336,16 +365,16 @@ usage() {
   req_count="${#req_arr[@]}"
   opt_count="${#opt_arr[@]}"
 
-  (( arg_count >= req_count && arg_count <= (req_count + opt_count) )) && return 1;
+  ((arg_count >= req_count && arg_count <= (req_count + opt_count))) && return 1
 
   local arg_str="$([[ "$arg_arr" ]] && printf '"%s" ' "${arg_arr[@]}")"
   local req_str="$([[ "$req_arr" ]] && printf '[%s] ' "${req_arr[@]}")"
   local opt_str="$([[ "$opt_arr" ]] && printf '[%s (optional)] ' "${opt_arr[@]}")"
 
-#  pdebug 'usage():'
-#  pdebug 'arg_str' "$arg_str" "(len=${arg_count})"
-#  pdebug 'req_str' "$req_str" "(len=${req_count})"
-#  pdebug 'opt_str' "$opt_str" "(len=${opt_count})"
+  #  pdebug 'usage():'
+  #  pdebug 'arg_str' "$arg_str" "(len=${arg_count})"
+  #  pdebug 'req_str' "$req_str" "(len=${req_count})"
+  #  pdebug 'opt_str' "$opt_str" "(len=${opt_count})"
 
   printf 'Usage: %s %s %s\n' "${FUNCNAME[1]}" "$req_str" "$opt_str"
   printf 'Received: %s\n' "$arg_str"
@@ -354,10 +383,52 @@ usage() {
 }
 
 # Replace regular "alias" with one that includes logging.
+
 alias() {
-  arg=("$@"); req=('name=value'); opt=(); usage arg req opt && return 1
+  #  arg=("$@"); req=('name=value'); opt=(); usage arg req opt && return 1
   # TODO: Skip alias for non-existing command
   # cmd_is_installed "$1" || return 0
   dbg 'alias' "$@"
   command alias "$@"
+}
+
+select_file() {
+  declare -n _files="$1"
+  #  local files="$1"
+  #  local files=("$1/"*)
+  local PS3='Select file or 0 to cancel: '
+  # Force `select` to print the options in a single column.
+  local COLUMNS=1
+  #  printf '\n'
+  select file in "${_files[@]}"; do
+    if [[ $REPLY == "0" ]]; then
+      printf >&2 'Cancelled'
+      return 1
+    elif [[ -z $file ]]; then
+      continue
+    else
+      #      printf >&2 'Selected: %s\n' "$file"
+      printf '%s' "$file" | perl -pe 's/^\s*//; s/\s*$//' # trim
+      return 0
+    fi
+  done
+}
+
+confirm() {
+  while true; do
+    read -r -p 'Ok? (y/n): ' reply
+    [[ "${reply,,}" == 'y' ]] && return 0
+    [[ "${reply,,}" == 'n' ]] && return 1
+  done
+}
+
+# Join array to string, with single character separator
+# Pass the array by reference (var, not $var)
+join_arr() {
+  local -n _arr="$1"
+  local -n _sep="$2"
+  # sep=
+  # arr
+  IFS="${_sep}"
+  echo "${_arr[*]}"
 }

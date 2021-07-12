@@ -57,3 +57,11 @@ fi
 # and pass though ANSI color codes.
 add_str 'LESS' 'j5' ' '
 add_str 'LESS' '-R' ' '
+# Make 'less' use the same text buffer instead of a separate one. 
+# The main effect is that, on exit, the text displayed by 'less'
+# remains on screen instead of being replaced with the text that
+# was on screen before 'less' was launced.
+add_str 'LESS' '-X' ' '
+
+
+
