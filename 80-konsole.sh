@@ -24,3 +24,16 @@ konsole_sync() {
 #     )
 #    start_sessions sessions[@]
 #}
+
+
+# This works best when sudo doesn't require a password. If it does, have to go to each
+# sudo tab and type it in.
+#tab_tup = (
+#    ('vpn',     ('m', 'sudo bin/vpn.sh')),
+#    ('root',    ('m', 'cd dev', 'sudo -s')),
+#    ('pycharm', ('m', 'cd dev', '. activate', 'pycharm')),
+#    ('webapp',  ('m', 'cd dev', '. activate', '#python mms/webapp/app.wsgi --threaded')),
+#    ('dev',     ('m', 'cd dev', '. activate')),
+#    ('dev2',    ('m', 'cd dev', '. activate')),
+#    ('tmp',     ('m', 'cd dev', '. activate', 'cd tmp')),
+#)

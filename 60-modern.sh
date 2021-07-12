@@ -22,6 +22,8 @@ cmd_is_installed 'bat' && {
   alias bp='bat --language=python'
   alias bpr='bat --language=python --decorations=never'
   alias bl='bat --plain'
+  alias bx='bat --language=xml'
+  # TODO: Include theme: --theme 'Monokai Extended Bright'
 }
 
 # aliases for 'exa'
