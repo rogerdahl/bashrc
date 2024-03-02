@@ -219,8 +219,6 @@ pip_is_package_installed() {
 
 #alias pip='pip_up; pip'
 
-####################
-
 if [ -d "${HOME}/.pyenv" ]; then
   pyenv_init
 fi
