@@ -1,0 +1,129 @@
+# APT packages that I install as standard on most systems.
+
+shell_arr=(
+  apt-file
+  atop
+  curl
+  dfc
+  etherwake
+  git
+  iotop
+  moreutils
+  mlocate
+  neovim
+  pixz
+  pv
+  p7zip
+  pbzip2
+  progress
+  renameutils
+  rar
+  rzip
+  ssh
+  sysstat
+  tmux
+  trash-cli
+  uuid
+  xpra
+  zstd
+  mp3wrap
+  mpg123
+  fdupes
+  feh
+  ffmpeg
+  fzf
+  handbrake-cli
+  imagemagick
+  lame
+  netpbm
+  smartmontools
+  xmlstarlet
+  mc
+  minicom
+  htop
+  inotify-tools
+)
+
+gui_arr=(
+  audacity
+  blueman
+  clementine
+  code
+  dconf-editor
+  flameshot
+  deluge
+  deluged
+  deluge-web
+  docker.io
+  doublecmd-qt
+  konsole
+  exfalso
+  gnome-tweaks
+  google-chrome-stable
+  gthumb
+  guvcview
+  kid3
+  mate-tweak
+  memtester
+  mpv
+  musl
+  musl-dev
+  musl-tools
+  okular
+  pavucontrol
+  postgresql
+  pypy
+  qdirstat
+  qt5ct
+  qt5-gtk2-platformtheme
+  qt5-style-plugins
+  samba
+  screen-resolution-extra
+  software-properties-common
+  spotify-client
+  swig
+  thunderbird
+  virtualbox
+  xterm
+  zoom
+)
+
+dev_arr=(
+  autoconf
+  automake
+  build-essential
+  clang-format
+  cmake
+  cmake-extras
+  doxygen
+  extra-cmake-modules
+  libavformat-dev
+  libboost-dev
+  libelf-dev
+  libenet-dev
+  liblz4-dev
+  libopenblas-dev
+  libsdl2-dev
+  libsdl2-image-2.0-0
+  libsdl-dev
+  libswscale-dev
+  libsystemd-dev
+  libxxhash-dev
+  libzstd-dev
+  llvm
+  ninja-build
+  python3
+  python-is-python3
+  python-openssl
+  xorg-dev
+)
+
+ubuntu_arr=(
+  libsdl1.2-dev
+)
+
+apt-install-all() {
+#  sudo apt install -y "${general_arr[@]}"
+#  sudo apt install -y "${dev_arr[@]}"
+  sudo apt install -y "${ubuntu_arr[@]}"
+}

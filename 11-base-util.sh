@@ -3,85 +3,15 @@
 # A set of basic utilities that the rest of .bashrc.d can rely on being available. They
 # are generally useful and available in the interactive shell as well.
 
-# Wrap text in one of the 8 basic ANSI colors.
-declare -A ANSI_COLORS=([black]=30 [red]=31 [green]=32 [yellow]=33 [blue]=34 [magenta]=35 [cyan]=36 [white]=37)
-color() {
-  [[ $# -eq 2 ]] || {
-    printf "Usage: color black/red/green/yellow/blue/magenta/cyan/white <text to print in color>\n"
-    return 1
-  }
-  # Bash syntax:
-  # \033 is the escape character in octal, 27 decimal, 0x1b hex.
-  printf "\033[01;%sm%s\033[00m\n" "${ANSI_COLORS[${1}]}" "${2}"
-}
 
-err_hiliter() {
-  bash | perl -pe 's/\w/\033[01;31m\1\033[00m/gi; last unless defined $_;'
-
-  #  rx_list='exception|err(or|\W)'
-  #  line = $_
-  #  while true; do
-  #    for r in rx_list; do
-  #        [[ ]]
-  #    done
-  #  done
-}
 
 # Logging with colors
 # - Bash syntax: The variable name for the array of arguments passed to a function is "".
 # Imagine it as being in front of each starting square bracket:
 # ${[@]} == (x=${@}; ${x[@]}).
 
-__p() {
-  # Print right adjusted. The ANSI color codes must be included in the count.
-  printf "%20s " "$(color "$1" "$2")"
-  shift 2
-  while (("$#")); do
-    local str="$1"
-    shift
-    # Replace the special string "sep" with a repeating string that fills the rest of the line.
-    if [[ "$str" == "sep" ]]; then
-      # If 'sep' is not the last arg, use the next arg as the string to repeat.
-      if (("$#")); then
-        sep_str="$1"
-        shift
-      else
-        sep_str="~"
-      fi
-      str="$(sep "$sep_str")"
-    fi
-    printf '%s' "$str"
-    (("$#")) && printf ' '
-  done
-  printf '\n'
-}
 
-#__p() {
-#  # TODO: Use 'shift' to simplify this.
-#  # Print right adjusted. The ANSI color codes must be included in the count.
-#  printf "%20s " "$(color "${1}" "${2}")"
-#  # We pass the format string to printf in a variable.
-#  # shellcheck disable=SC2059
-#  local i=1;
-#  local arg_count=$((${#} - 2))
-#  for str in "${@:3}"; do
-#    # Replace the special string "sep" with a repeating string that fills the rest of the line.
-#    if [[ "$str" == "sep" ]]; then
-#      # If 'sep' is not the last arg, use the next arg as the string to repeat.
-#      if [[ $i < "$arg_count" ]]; then
-#        sep_str="${*:$((i + 3)):1}"
-#      else
-#        sep_str="~"
-#      fi
-#      str="$(sep "$sep_str")"
-#    fi
-#    printf '%s' "$str"
-#    (( i < arg_count)) && printf ' '
-#    i=$((i + 1))
-#  done
-#  printf $'\n'
-#}
-#
+
 # Print a line with severity level. The severity level is colorized when writing to a
 # tty. Multiple arguments are printed on the same line separarated by a single space.
 # The special string "sep" causes the remaining part of the line to be filled with a
