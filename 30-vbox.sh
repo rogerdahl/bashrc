@@ -66,15 +66,16 @@ declare -A STD_REZ=(
 
 # VM aliases
 # shellcheck disable=SC2139
-alias edi-local='vm_start local  4k edi'
-alias cdl-local='vm_start local  4k cdl'
+alias edi-local='vm_start local 4k edi'
 alias edi-remote='vm_start remote 2k edi'
-
+alias cdl-local='vm_start local 4k cdl'
 alias cdl-remote='vm_start remote 2k cdl'
 alias edi-remote-4k='vm_start remote 4k edi'
 alias cdl-remote-4k='vm_start remote 4k cdl'
 alias d1-local='vm_start local  4k d1'
 alias d1-remote='vm_start remote 2k d1'
+alias pasta-local='vm_start local 4k PASTA'
+alias pasta-remote='vm_start remote 2k PASTA'
 
 vm_create() {
   printf "\nCreate a new virtual machine (Ctrl+C to cancel):\n\n"

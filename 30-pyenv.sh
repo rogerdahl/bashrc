@@ -62,6 +62,7 @@ pyenv_setup() {
   export PY_GLOBAL_VENV
 }
 
+
 pyenv_install_or_update_pyenv() {
   cmd_is_installed 'pyenv' || {
     curl 'https://pyenv.run' | bash
@@ -136,12 +137,12 @@ pyenv_init() {
     printf 'Error: pyenv already initialized\n'
     return 1
   }
-  printf 'Initializing pyenv\n'
+  # printf 'Initializing pyenv\n'
   export PYENV_ROOT="$HOME/.pyenv"
   export PATH="$PYENV_ROOT/bin:$PATH"
   #    padd "$PYENV_ROOT/bin"
   eval "$(pyenv init --path)"
-  #    eval "$(pyenv virtualenv-init -)"
+  eval "$(pyenv virtualenv-init -)"
 }
 
 pyenv_deinit() {
@@ -177,8 +178,6 @@ pyenv_deinit() {
   sep=':'
   printf -v PATH '%s' "$(join_arr new_path sep)"
 }
-
-pyenv_init
 
 # pip
 
@@ -219,3 +218,10 @@ pip_is_package_installed() {
 }
 
 #alias pip='pip_up; pip'
+
+####################
+
+if [ -d "${HOME}/.pyenv" ]; then
+  pyenv_init
+fi
+

@@ -28,8 +28,6 @@ alias p='pytest -vvv --capture=no --failed-first --exitfirst --reuse-db --sample
 alias pc='pytest -vvv --capture=no --failed-first --exitfirst --reuse-db --sample-ask --pycharm --cov=. --cov-report=term --cov-report=xml'
 alias p='pytest -xvs --sample-ask --pycharm'
 
-alias pyc="\$HOME/bin/JetBrains/pycharm.sh"
-
 alias yapf="yapf -i"
 
 # systemd

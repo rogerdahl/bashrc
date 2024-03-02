@@ -9,7 +9,7 @@ is_dir "$_esp_idf_path" && {
   # It's probably best to keep a separate venv only for ESP-IDF and set set it in the
   # root of ESP-IDF projects.
   ESP_IDF_PATH="$_esp_idf_path"
-  IDF_PYTHON_ENV_PATH="$_esp_idf_path"
+  IDF_PYTHON_ENV_PATH="$_esp_idf_path/venv"
   # Activate ESP-IDF environment with "get-idf"
   alias get-idf='. $ESP_IDF_PATH/export.sh'
   PY_ESP_IDF_VENV="esp-idf"

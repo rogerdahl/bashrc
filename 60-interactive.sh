@@ -16,7 +16,8 @@ alias wdf="watch -n 2 --color --differences df --type ext4"
 # Create relative symlink(s) to executable(s) in ~/bin
 alias sbin="ln -srft $HOME/bin"
 
-dd() { dd if="$1" of="$2" bs=4M oflag=direct status=progress; }
+dd() { printf 'Use mydd\n'; }
+mydd() { sudo dd if="$1" of="$2" bs=4M oflag=direct status=progress; }
 
 # Show disk and memory usage
 alias f='df -h /dev/sd* | grep -v udev && echo && free -mh'
@@ -64,7 +65,11 @@ gr() { grep -R --perl-regex --color=always "$1" . | less --raw; }
 alias notheme='env GTK2_RC_FILES=/usr/share/themes/Mint-X-Teal/gtk-2.0/gtkrc'
 alias dcm2txt='for f in *.dcm; do dcmdump > $f.txt $f; done'
 alias start='xdg-open'
-alias rmempty='find . -empty -delete'
+
+rmempty() {
+  find "${1:?}" -empty -delete
+}
+
 # Case insensitive search in man pages
 alias man='man -i'
 alias v='gpicview'
@@ -91,7 +96,6 @@ alias grep='grep --color=auto --perl-regexp'
 alias notheme='env GTK2_RC_FILES=/usr/share/themes/Mint-X-Teal/gtk-2.0/gtkrc'
 alias dcm2txt='for f in *.dcm; do dcmdump > $f.txt $f; done'
 alias start='gtk-launch'
-alias rmempty='find . -empty -delete'
 
 alias nobuffer='stdbuf -i0 -o0 -e0'
 
@@ -99,18 +103,21 @@ alias nobuffer='stdbuf -i0 -o0 -e0'
 # Filtering: Remember the *** operator that was added in 2.6.7 (2006) and that 'dir/**'
 # does not match dirs. Copying only dirs d1 and d2:
 # $ rs -f '+ d1/***' -f '+ d2/***' -f '- *'
-RSYNC_ARGS='--recursive --links --times --info=progress2'
+# --no-inc-recursive: Scan all files to be transferred up front so that progress is correct
+# from the start, at the cost of using more memory (paths for files to be transferred stored
+# in memory)
+RSYNC_ARGS='--recursive --links --times --info=progress2 --no-inc-recursive'
 # shellcheck disable=SC2139
 alias rs="rsync $RSYNC_ARGS"
 # shellcheck disable=SC2139
-alias rs_mv="rsync $RSYNC_ARGS --remove-source-files"
+alias rsm="rsync $RSYNC_ARGS --remove-source-files --prune-empty-dirs"
 # Case insensitive search in man pages
 alias man='man -i'
 
 #alias v='gpicview'
 alias v='nomacs'
 
-alias lsblk='lsblk -o +uuid,label,hotplug,tran'
+alias lsblk='lsblk -o +uuid,label,hotplug,tran,fstype'
 
 locll() { locate -0 "$1" | xargs -0 ls -l; }
 

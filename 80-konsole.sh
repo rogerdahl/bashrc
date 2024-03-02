@@ -10,8 +10,8 @@ konsole_sync() {
     echo "Missing RSYNC_ARGS"
     return 1
   }
-  rsync "$RSYNC_ARGS" .config/konsole* "$1":.config/
-  rsync "$RSYNC_ARGS" .local/share/konsole "$1":.local/share/
+  rsync $RSYNC_ARGS .config/konsole* "$1":.config/
+  rsync $RSYNC_ARGS .local/share/konsole "$1":.local/share/
 }
 
 # Automatically set up Konsole with predefined tabs with titles and executes.
