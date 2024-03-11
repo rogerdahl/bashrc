@@ -18,11 +18,11 @@ binary_arr=(
   cargo-watch
   ddh
   diskonaut
-  dust
+  du-dust
   dua
   exa
   fd
-  delta
+  git-delta
   gix
   gixp
   grex
