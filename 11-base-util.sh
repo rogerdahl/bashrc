@@ -3,58 +3,9 @@
 # A set of basic utilities that the rest of .bashrc.d can rely on being available. They
 # are generally useful and available in the interactive shell as well.
 
-
-
-# Logging with colors
-# - Bash syntax: The variable name for the array of arguments passed to a function is "".
-# Imagine it as being in front of each starting square bracket:
-# ${[@]} == (x=${@}; ${x[@]}).
-
-
-
-# Print a line with severity level. The severity level is colorized when writing to a
-# tty. Multiple arguments are printed on the same line separarated by a single space.
-# The special string "sep" causes the remaining part of the line to be filled with a
-# repeated character. The character is "~" by default. Another character can be selected
-# by adding it after "sep". E.g. `pdebug "my message" sep =`  ,
-#    DEBUG my message ===========================================
-pdebug() { __p 'magenta' 'DEBUG' "${@}"; }
-# Not named 'info' as that name is used by the GNU Info doc reader, often used for man pages.
-pinfo() { __p 'green' 'INFO' "${@}"; }
-pwarn() { __p 'yellow' 'WARNING' "${@}"; }
-perror() { __p 'red' 'ERROR' "${@}"; }
-pln() { printf "\n"; }
-
-# Create a line of repeated strings that, when printed, will span from the current
-# position of the caret to the end of the line. If space is wanted between the last
-# last printed character and the start of the line, print the space before calling this
-# method.
-sep() {
-  arg=("$@")
-  req=()
-  opt=('character or string to repeat')
-  usage arg req opt && return 1
-  local cur_col="$(get_caret_col)"
-  local sep_str="${arg-~}"
-  local sep_len="${#sep_str}"
-  local fill_len=$((COLUMNS - cur_col))
-  local full_count=$((fill_len / sep_len))
-  local rem_count=$((fill_len - (full_count * sep_len)))
-  for ((i = 0; i < full_count; i++)); do
-    printf '%s' "$sep_str"
-  done
-  printf '%s' "${sep_str::$rem_count}"
-}
-
-# Debugging for bashrc.d itself.
-dbg() {
-  ((BASHRC_DEBUG)) && pdebug "${@}"
-}
-
 # Return true if the script is sourced (invoked with "source <script>" or ". <script>".
 is_sourced() {
-  [[ "$0" == "${BASH_SOURCE[0]}" ]] || return 1
-  return 0
+  [[ "$0" != "${BASH_SOURCE[0]}" ]] && return 0 || return 1
 }
 
 cmd_is_installed() {
@@ -85,24 +36,13 @@ is_in_list() {
   local value="$2"
   local sep_str="$3"
 
-  #  printf "value=%s\n" "$value"
-  #  printf "env_var=%s\n" "$env_var"
-  #  printf "env_var_value=%s\n" "${!env_var}"
-  #  printf "sep_str=%s\n" "$sep_str"
-
   [[ -z "$env_var" ]] && env_var='PATH'
   rx="(^|${sep_str})$value(\$|${sep_str})"
   [[ "${!env_var}" =~ $rx ]] && return 0
   return 1
 }
 
-#split() {
-#  # env
-#  # sep
-#  declare -a path_arr
-#  IFS=':' read -r -d '' -a path_arr <<< "$!{PATH}"
-#}
-
+# Print the search path
 path() {
   declare -a path_arr
   IFS=":" read -r -d '' -a path_arr <<<"$PATH"
@@ -159,19 +99,17 @@ dedup() {
 }
 
 # Return the current date-time in a format similar to ISO 8601.
-# - Date and time are separated by an underscore (_) instead of "T".
-# - Hour, minute and second are separated by ";" instead of ":".
-# - Note: ":" is valid for filenames under Linux, but it's invalid under Windows, and is
-# used as a path separator on Unix, so it's best to avoid it.
+# - Date and time are separated by a space instead of "T".
+# - Hour, minute and second are separated by ";" instead of ":" (for use in filename)
 now() {
-  printf "%s" "$(date "+%Y-%m-%d_%H;%M;%S")"
+  printf '%s' "$(date "+%Y-%m-%d_%H;%M;%S")"
 }
 
 # Return the current date-time in a format similar to ISO 8601, for use in filenames.
 # - Date and time are separated by an underscore instead of "T".
 # - Hour, minute and second are separated by ";" instead of ":"
 nowfn() {
-  printf "%s" "$(date "+%Y-%m-%d_%H;%M;%S")"
+  printf '%s' "$(date "+%Y-%m-%d_%H;%M;%S")"
 }
 
 # Get the absolute path to the directory of the caller.

@@ -1,5 +1,3 @@
-#
-
 monitor_off() {
   run_xrandr --off
 }

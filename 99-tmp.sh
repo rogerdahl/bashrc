@@ -7,8 +7,6 @@ date-add() {
   printf "$1"
 }
 
-padd "$(npm bin)"
-
 # Split path and extension
 
 split-path() {
@@ -44,9 +42,6 @@ eject() {
   done
   unset IFS
 }
-
-
-padd "$(npm bin)"
 
 todo() {
   p="$BASHRC_DIR/todo"

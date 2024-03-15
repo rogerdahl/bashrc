@@ -48,8 +48,6 @@ padd() {
 #  printf "%s %s %s" "$path" "$delimiter" "$env_var"
 #  printf '==========================================\n'
 
-  func_tracer "$@"
-
   [[ -n "$1" ]] || {
     printf '%s\n' 'Usage: padd <path> <optional delimiter> <optional var name>'
     printf '%s\n' 'If given only a path, adds it to PATH, using delimiter ":"'

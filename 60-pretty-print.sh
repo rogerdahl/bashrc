@@ -63,5 +63,3 @@ add_str 'LESS' '-R' ' '
 # was on screen before 'less' was launced.
 add_str 'LESS' '-X' ' '
 
-
-

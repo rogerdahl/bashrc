@@ -29,10 +29,3 @@ alias pc='pytest -vvv --capture=no --failed-first --exitfirst --reuse-db --sampl
 alias p='pytest -xvs --sample-ask --pycharm'
 
 alias yapf="yapf -i"
-
-# systemd
-alias sys='sudo systemctl'
-alias sysj='sudo journalctl'
-alias sysu='systemctl --user'
-alias sysju='journalctl --user'
-# todo: move systemd aliases to better location

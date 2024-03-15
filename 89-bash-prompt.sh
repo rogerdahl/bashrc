@@ -5,25 +5,19 @@
 # to draw on.
 
 # Debugging:
-# This script runs every time a new prompt is to be displayed, so anythig that it
+# This script runs every time a new prompt is to be displayed, so anything that it
 # writes to stdout or stderr is printed before every prompt. Unless specifically
 # debugging the script, the output interferes with other use, including debugging
 # of other scripts. So output from this script, including debug level output, is
 # controlled separately from other output, and is normally disabled.
-#
-# - BASHRC_DEBUG is normally turned off by init.sh just before exit, so debug output is
-# not shown. To enable debug output for this function, `export BASHRC_DEBUG='y'` in the
-# interactive shell.
 
 AUTO_LS_AFTER_CD=true
 #export GIT_PS1_SHOWUPSTREAM='auto'
 
-# By default, we disable debugging while creating the prompt. Any string is "true"
-DISABLE_PROMPT_DEBUG=true
-
 PROMPT_SEP_STR=" "
 
-export PROMPT_COMMAND=__prompt_command # Func to gen PS1 after CMDs
+# Func to gen PS1 after CMDs
+export PROMPT_COMMAND=__prompt_command
 
 prompt_simple() {
   export PROMPT_COMMAND='{ PS1="$ "; }'
@@ -33,11 +27,6 @@ prev_exit='x'
 
 __prompt_command() {
   cur_exit="${PIPESTATUS[-1]}"
-
-  ((DISABLE_PROMPT_DEBUG)) && {
-    tmp_debug=$BASHRC_DEBUG
-    BASHRC_DEBUG=false
-  }
 
   ((AUTO_LS_AFTER_CD)) && {
     test "$prev" != "$PWD" -a -n "$prev" && ll
@@ -76,10 +65,6 @@ __prompt_command() {
   }
 
   PS1+="\$$PROMPT_SEP_STR"
-
-  ((DISABLE_PROMPT_DEBUG)) && {
-    BASHRC_DEBUG=$tmp_debug
-  }
 }
 
 # Wrap a string with ANSI color codes for use in the prompt. BASH requires characters
@@ -88,14 +73,3 @@ __prompt_command() {
 color_prompt() {
   printf "\\[\033[01;%sm\\]%s\\[\033[00m\\]\n" "${ANSI_COLORS[$1]}" "$2"
 }
-
-
-#color_prompt() {
-#  printf "%s" "$(color "$1" "${@::1}")"
-#  case $1 in
-#  *\ *) s="\"$1\"" ;;
-#  *) s="$1" ;;
-#  esac
-#  s="\\[$s\\]"
-#  printf '%s' "$s"
-#}
