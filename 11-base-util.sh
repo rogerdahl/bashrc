@@ -100,16 +100,11 @@ dedup() {
 
 # Return the current date-time in a format similar to ISO 8601.
 # - Date and time are separated by a space instead of "T".
-# - Hour, minute and second are separated by ";" instead of ":" (for use in filename)
+# - Hour, minute and second are separated by "-" instead of ":".
+# - This format is safe for filenames, and sorting alphabetically will also sort
+#   chronologically.
 now() {
-  printf '%s' "$(date "+%Y-%m-%d_%H;%M;%S")"
-}
-
-# Return the current date-time in a format similar to ISO 8601, for use in filenames.
-# - Date and time are separated by an underscore instead of "T".
-# - Hour, minute and second are separated by ";" instead of ":"
-nowfn() {
-  printf '%s' "$(date "+%Y-%m-%d_%H;%M;%S")"
+  printf '%s' "$(date "+%Y-%m-%d_%H-%M-%S")"
 }
 
 # Get the absolute path to the directory of the caller.
@@ -123,7 +118,6 @@ nowfn() {
 #   it is called from. The location of the script holding function is not relevant.
 here() {
   echo -n "$(dirname "$(readlink -f "$0")")"
-  #  echo -n "$(dirname $(readlink -f $0))"
 }
 
 # Get the absolute path to the directory of the caller.

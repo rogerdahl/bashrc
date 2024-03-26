@@ -15,7 +15,7 @@ bak() {
     printf 'Source does not exist: %s\n' "${src}"
     return 1
   }
-  dst="$(basename "${src}")-bak-$(nowfn).tar.zstd"
+  dst="$(basename "${src}")-bak-$(now).tar.zstd"
   [[ ! -e ${dst} ]] || {
     printf 'Backup already exists: %s\n' "${dst}"
     return 1
