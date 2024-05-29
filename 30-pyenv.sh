@@ -27,6 +27,7 @@ pyenv_install_deps() {
   pkg_install \
     'build-essential' \
     'curl' \
+    'git' \
     'python3-dev' \
     'python-openssl' \
     'python-setuptools' \
@@ -44,7 +45,11 @@ pyenv_install_deps() {
     'libz-dev' \
     'tk-dev' \
     'zlib1g-dev'
+    # llvm
+    # tk-dev
+    # xz-utils
 }
+
 
 # Ensure that pyenv is installed, active and that there's
 # a global venv with latest version of CPython.
@@ -108,9 +113,13 @@ pyenv_install_py_ver() {
 # Return the latest version of CPython that is available to pyenv online.
 # The returned version may or may not already be installed.
 pyenv_find_latest_py_ver() {
-  # shellcheck disable=SC2016
-  latest_cpython='m/^\s*(\d+\.\d+\.\d+)\s*$/ && { $v=$1 }; END {print $v}'
-  printf "%s" "$(pyenv install --list | perl -ne "$latest_cpython")"
+  for v in $(pyenv install --list); do
+    [[ $v =~ ^\ *[0-9]+\.[0-9]+\.[0-9]+\ *$ ]] && {
+      latest_cpython="$(echo "$v" | tr -d ' ')"
+      echo "pyenv install -s $v"
+    }
+  done
+  printf "%s" "$latest_cpython"
 }
 
 pyenv_update() {
@@ -222,4 +231,3 @@ pip_is_package_installed() {
 if [ -d "${HOME}/.pyenv" ]; then
   pyenv_init
 fi
-
