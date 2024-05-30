@@ -37,6 +37,7 @@ qt-conf() {
 #  export QT_IM_MODULE=ibus
   export QT_QPA_PLATFORMTHEME=qt5ct
 #  export QT_PLATFORM_PLUGIN=gtk2
+  export QT_STYLE_OVERRIDE=adwaita-dark
 }
 
 # Print QT env vars

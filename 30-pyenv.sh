@@ -28,9 +28,6 @@ pyenv_install_deps() {
     'build-essential' \
     'curl' \
     'git' \
-    'python3-dev' \
-    'python-openssl' \
-    'python-setuptools' \
     'libbz2-dev' \
     'libc6-dev' \
     'libdb-dev' \
@@ -42,9 +39,11 @@ pyenv_install_deps() {
     'libreadline-dev' \
     'libsqlite3-dev' \
     'libssl-dev' \
-    'libz-dev' \
+    'python-setuptools' \
+    'python3-dev' \
     'tk-dev' \
     'zlib1g-dev'
+#    'python-openssl' \
     # llvm
     # tk-dev
     # xz-utils
@@ -116,7 +115,6 @@ pyenv_find_latest_py_ver() {
   for v in $(pyenv install --list); do
     [[ $v =~ ^\ *[0-9]+\.[0-9]+\.[0-9]+\ *$ ]] && {
       latest_cpython="$(echo "$v" | tr -d ' ')"
-      echo "pyenv install -s $v"
     }
   done
   printf "%s" "$latest_cpython"
