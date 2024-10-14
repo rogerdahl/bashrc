@@ -16,13 +16,13 @@ cmd_is_installed rg && {
 }
 
 # Bat, the amazing cat with wings.
-cmd_is_installed 'bat' && {
-  alias b='bat'
-  alias br='bat --decorations=never'
-  alias bp='bat --language=python'
-  alias bpr='bat --language=python --decorations=never'
-  alias bl='bat --plain'
-  alias bx='bat --language=xml'
+cmd_is_installed 'batcat' && {
+  alias b='batcat'
+  alias br='batcat --decorations=never'
+  alias bp='batcat --language=python'
+  alias bpr='batcat --language=python --decorations=never'
+  alias bl='batcat --plain'
+  alias bx='batcat --language=xml'
   # TODO: Include theme: --theme 'Monokai Extended Bright'
 }
 
