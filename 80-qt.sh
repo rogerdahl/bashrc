@@ -37,7 +37,10 @@ qt-conf() {
 #  export QT_IM_MODULE=ibus
   export QT_QPA_PLATFORMTHEME=qt5ct
 #  export QT_PLATFORM_PLUGIN=gtk2
-  export QT_STYLE_OVERRIDE=adwaita-dark
+  # This style is the only one I've found that works for setting VirtualBox Manager to a dark theme.
+  # It's best to set this directly on the virtualbox launch config, since this is not the style I
+  # want for all QT apps.
+#  export QT_STYLE_OVERRIDE=adwaita-dark
 }
 
 # Print QT env vars
