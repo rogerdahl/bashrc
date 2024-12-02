@@ -116,6 +116,7 @@ alias dmesg='dmesg --human --color=always | bat --pager="less -iSR"'
 # alias i='sudo apt install'
 
 i() {
+  sudo apt update
   for p in "$@"; do
     if sudo apt install "$p"; then
       printf >> "$HOME/installed.txt" '%s\n' "$p"
