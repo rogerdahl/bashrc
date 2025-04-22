@@ -22,6 +22,7 @@ eval "$(dircolors)"
 # Enable regex glob.
 # - Syntax +(regex). E.g.: ls /tmp/file.+([0-9])
 shopt -s extglob
+
 # Enable recursive directory glob.
 # - Syntax: `**` expands recursively to all matching nested paths.
 # - E.g.:
@@ -45,7 +46,7 @@ shopt -s globstar
 # single quote them.
 # - E.g.:
 # - `vim *.py` returns an error if there are no `.py` files in the current dir instead
-shopt -s failglob
+#shopt -s failglob
 
 # Enable glob that does match anything to fall back to zero arguments (an empty array)
 # instead of a literal dir or file name.
@@ -71,6 +72,7 @@ GLOBIGNORE=.:..
 # Check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
 # CD into a directory by typing just the name
 shopt -s autocd
 
