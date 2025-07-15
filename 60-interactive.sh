@@ -114,6 +114,12 @@ alias rsm="rsync $RSYNC_ARGS --remove-source-files --prune-empty-dirs"
 # Case insensitive search in man pages
 alias man='man -i'
 
+# Using rsync for comparing two directory trees byte by byte
+# Files that exist in dst will show as "deleting" (remember, it's a dry-run)
+compare-directory-trees() {
+  rsync --dry-run --delete --recursive --verbose --checksum "$1" "$2"
+}
+
 #alias v='gpicview'
 alias v='nomacs'
 
