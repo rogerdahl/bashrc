@@ -20,6 +20,13 @@ require() {
   return $missing
 }
 
+
+# Ctrl+C - SIGINT
+# Ctrl+\ - SIGQUIT
+# Ctrl+Z - SIGTSTP
+
+
+
 require_cmd() {
   arg=("$@") req=('name of command required to be in PATH') opt=()
   usage arg req opt && return 1
@@ -29,6 +36,16 @@ require_cmd() {
     printf >&2 "Missing a required command: %s\n" "$cmd_str"
   }
 }
+
+# Add an apt package to the list of deps
+#require() {
+#  pkg="$1"
+#  comment="$2"
+#  # shellcheck disable=SC2030
+#  echo "require: ${pkg}$([[ -n "$comment" ]] && echo -n " ($comment)"; )"
+#  # shellcheck disable=SC2031
+#  REQ_ARR["$pkg"]="$comment"
+#}
 
 list_deps() {
   for pkg in "${!REQ_ARR[@]}"; do

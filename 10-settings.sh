@@ -4,6 +4,13 @@
 export false=0
 export true=1
 
+# Set to true or false
+export BASHRC_DEBUG=false
+#export BASHRC_DEBUG=true
+
+# 'dbg' not yet available
+(( BASHRC_DEBUG )) && printf 'Debug level logging enabled\n'
+
 export XDG_CONFIG_HOME="$HOME/.config"
 
 # Base settings for ls, du and other commands from the coreutils package.
