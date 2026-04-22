@@ -88,7 +88,7 @@ locates() { locate -0 "$1" | xargs -0 --no-run-if-empty ls -ld; }
 # Alias
 #
 
-alias grep='grep --color=auto --perl-regexp'
+alias grep='grep --color=auto'
 #alias fgrep='fgrep --color=auto'
 #alias egrep='egrep --color=auto'
 #alias grep='rg'

@@ -1,3 +1,5 @@
+alias stl='echo use fstl'
+
 mk_stl_thumbnails() {
   if [ ! -d thumb ] ; then
     mkdir thumb
@@ -16,3 +18,4 @@ mk_stl_thumbnails() {
 
   rm -f x.scad
 }
+

@@ -1,10 +1,8 @@
 # Global settings
 
 # shellcheck disable=SC2034
-export false=0
-export true=1
 
-# Set to true or false
+# Set to true or false (these are shell commands that evaluate to 0 or 1)
 export BASHRC_DEBUG=false
 #export BASHRC_DEBUG=true
 

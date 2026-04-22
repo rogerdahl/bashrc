@@ -21,26 +21,19 @@ printf 'bashrc.d...\n'
 BASHRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 BASHRC_BIN_DIR="${BASHRC_DIR}/bin"
 
-# Utils that are not shell scripts
-padd "$BASHRC_BIN_DIR"
-
-# We want to be able to drop any executable dependencies for any of the scripts into
-# ./bashrc.d/bin without worrying about if that's in the path yet, so we add it here.
-#PATH="$BASHRC_DIR/bin${PATH:+:${PATH}}"
-
-#export PATH
-
-# Source scripts 00 - 19. These are general utilities intended for use both in
-# interactive shell and scripts.
-. "$BASHRC_DIR/util.sh"
-
-# Source scripts 20-99. These provide functionality intended for use in interactive
-# shell.
-for sh in "$BASHRC_DIR"/+([2-9][0-9]-*.sh); do
-  dbg "$sh" sep
+# Source the numbered scripts (nn-name.sh) in order.
+shopt -s extglob
+for sh in $(ls "$BASHRC_DIR"/+([0-9][0-9]-*.sh) | sort); do
+  (( BASHRC_DEBUG )) && {
+    echo "----"
+    echo "Sourcing $sh..."
+  }
   # shellcheck disable=SC1090
   . "$sh"
 done
+
+# Utils that are not shell scripts
+padd "$BASHRC_BIN_DIR"
 
 # Display 'last' info for login shells
 shopt -q login_shell && {

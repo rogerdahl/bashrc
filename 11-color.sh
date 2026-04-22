@@ -16,7 +16,7 @@ color() {
 }
 
 # Print a line with severity level. The severity level is colorized when writing to a
-# tty. Multiple arguments are printed on the same line separarated by a single space.
+# tty. Multiple arguments are printed on the same line separated by a single space.
 # The special string "sep" causes the remaining part of the line to be filled with a
 # repeated character. The character is "~" by default. Another character can be selected
 # by adding it after "sep". E.g. `pdebug "my message" sep =`  ,
@@ -28,7 +28,7 @@ perror() { __p 'red' 'ERROR' "${@}"; }
 pln() { printf "\n"; }
 
 dbg() {
-  [[ "$DEBUG" ]] && pdebug "$@"
+  (( BASHRC_DEBUG )) && pdebug "$@"
 }
 
 __p() {

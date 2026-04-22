@@ -1,5 +1,8 @@
 # This is a spot to quickly dump stuff before I know where it should go.
 
+# My keyboard setting. Should be in udev.
+alias k='xset r rate 200 50'
+
 alias date-ymd='date +"%Y-%m-%d"'
 
 # Rename a file by adding the current date to the end, before the extension.

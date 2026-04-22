@@ -72,4 +72,4 @@ rust-install-all() {
  done
 }
 
-alias fd='fd --no-ignore'
+alias fd='fd --no-ignore --hidden'

@@ -81,20 +81,12 @@ shopt -s autocd
 # Don't put duplicate lines or lines starting with space in the history
 HISTCONTROL=ignoreboth:erasedups
 
-# Append to the history file, don't overwrite it
-
-# The default HISTCONTROL setting normally includes "ignoreboth", which causes lines
-# starting with one or more spaces not to be added to the history. Since leading spaces
-# are often included accidentally when copy/pasting commands into the shell, it's
-# removed here.
-HISTCONTROL=erasedups
-
 # Append to the history file, don't overwrite it.
 shopt -s histappend
 
 # History length
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=20000
 
 # Include timestamps
 HISTTIMEFORMAT='%Y-%m-%d %H:%M:%s  '

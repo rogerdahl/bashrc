@@ -65,6 +65,9 @@ __prompt_command() {
   }
 
   PS1+="\$$PROMPT_SEP_STR"
+
+  # Immediately flush the last command to history
+  history -a
 }
 
 # Wrap a string with ANSI color codes for use in the prompt. BASH requires characters
