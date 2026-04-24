@@ -18,3 +18,4 @@ mk_stl_thumbnails() {
 
   rm -f x.scad
 }
+
