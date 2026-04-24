@@ -106,7 +106,7 @@ alias nobuffer='stdbuf -i0 -o0 -e0'
 # --no-inc-recursive: Scan all files to be transferred up front so that progress is correct
 # from the start, at the cost of using more memory (paths for files to be transferred stored
 # in memory)
-RSYNC_ARGS='--recursive --links --times --info=progress2 --no-inc-recursive'
+RSYNC_ARGS='--recursive --links --times --archive --hard-links --acls --xattrs --sparse --numeric-ids --info=progress2 --no-inc-recursive'
 # shellcheck disable=SC2139
 alias rs="rsync $RSYNC_ARGS"
 # shellcheck disable=SC2139
