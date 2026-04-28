@@ -49,6 +49,6 @@ qt-print() {
   env | grep '^QT_'
 }
 
-qt-unset
-qt-conf
+#qt-unset
+#qt-conf
 

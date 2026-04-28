@@ -306,15 +306,42 @@ join_arr() {
   echo "${_arr[*]}"
 }
 
-# Bash alternative to `realpath --canonicalize-existing --quiet`. Does not follow symlinks. Works
-# only on files and dirs.
+# Bash alternative to `realpath --canonicalize-existing --quiet` implemented with
+# bash builtins only. Does not follow symlinks for the final path element.
+# Works only on existing files and dirs.
 abs_path() {
-  path="$1"
-  [[ -d "$path" || -f "$path" ]] && {
-    echo -n "$(cd "$(dirname "$path")" && pwd)/$(basename "$path")";
-    return 0;
+  local path="$1"
+  local dir
+  local base
+
+  [[ -n "$path" ]] || return 1
+  [[ -d "$path" || -f "$path" ]] || return 1
+
+  [[ "$path" == "/" ]] && {
+    printf '/'
+    return 0
   }
-  return 1
+
+  # Normalize a single trailing slash to keep splitting predictable.
+  path="${path%/}"
+
+  if [[ "$path" == */* ]]; then
+    dir="${path%/*}"
+    base="${path##*/}"
+    [[ -n "$dir" ]] || dir='/'
+  else
+    dir='.'
+    base="$path"
+  fi
+
+  (
+    builtin cd -P -- "$dir" || exit 1
+    if [[ "$PWD" == '/' ]]; then
+      printf '/%s' "$base"
+    else
+      printf '%s/%s' "$PWD" "$base"
+    fi
+  )
 }
 
 # Add path to the front of PATH, or another ":" delimited env var.
@@ -337,9 +364,10 @@ padd() {
   opt=('env var name (without dollar sign)' 'separator');
   usage arg req opt && return 1
 
-  path="$1"
-  env_var="$2"
-  sep_str="$3"
+  local path="$1"
+  local env_var="$2"
+  local sep_str="$3"
+  local p
 
   dbg "path=%s\n" "$path"
   dbg "sep_str=%s\n" "$sep_str"

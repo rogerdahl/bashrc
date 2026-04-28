@@ -1,7 +1,15 @@
 # Search path
 
-# Set PATH to system default
-export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin'
+export PATH=''
+
+padd '/bin'
+padd '/sbin'
+padd '/usr/bin'
+padd '/usr/local/bin'
+padd '/usr/local/sbin'
+padd '/usr/sbin'
+
+padd '/snap/bin'
 
 padd "$HOME/bin"
 padd "$HOME/local/bin"
