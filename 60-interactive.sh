@@ -161,3 +161,9 @@ alias cd......="cd ../../../../.."
 function md() {
   mkdir -p "$@" && eval cd "\"\$$#\""
 }
+
+# Dangerous commands
+alias poweroff='Use powoff'
+alias reboot='Use boot'
+alias powoff='sudo poweroff'
+alias boot='sudo reboot'

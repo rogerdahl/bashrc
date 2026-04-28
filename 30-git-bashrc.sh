@@ -1,4 +1,4 @@
-# Shortcuts for dealing with .bashrc itself.
+# Shortcuts for dealing with .bashrc.d itself.
 
 rc_cd() {
   cd "$BASHRC_DIR" || {
